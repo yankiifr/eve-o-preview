@@ -134,14 +134,16 @@ namespace EveOPreview.Services
             IOrderedEnumerable<KeyValuePair<string, int>> clientOrder;
             Dictionary<string, int> _cycleOrder = new Dictionary<string, int>(cycleOrder);
 
-            if (_cycleOrder.Count == 0)
-            {
-                int order = 0;
-                foreach (var x in _thumbnailViews)
-                {
-                    _cycleOrder.Add(x.Value.Title, order++);
-                }
-            }
+			if ( _cycleOrder.Count == 0 ) 
+			{
+				int order = 0;
+				foreach( var x in _thumbnailViews )
+				{
+					if (!_cycleOrder.ContainsKey(x.Value.Title)) {
+						_cycleOrder.Add(x.Value.Title, order++);
+					}
+				}
+			}
 
             if (isForwards)
             {
