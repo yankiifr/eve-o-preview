@@ -9,11 +9,13 @@ namespace EveOPreview.Configuration
         // Unlimited, named cycle groups (replaces the former fixed CycleGroup1..5 properties).
         List<CycleGroupConfiguration> CycleGroups { get; set; }
 
-        Dictionary<string, Color> PerClientActiveClientHighlightColor { get; set; }
-        Dictionary<string, Color> PerClientPreventPreviewColor { get; set; }
-        Dictionary<string, bool> PerClientPreventPreviews { get; set; }
-        Dictionary<string, Size> PerClientThumbnailSize { get; set; }
-        Dictionary<string, bool> CycleGroupExclusions { get; set; }
+
+		Dictionary<string, Color> PerClientActiveClientHighlightColor { get; set; }
+		Dictionary<string, Color> PerClientPreventPreviewColor { get; set; }
+		Dictionary<string, string> PerClientAliases { get; set; }
+		Dictionary<string, bool> PerClientPreventPreviews { get; set; }
+		Dictionary<string, Size> PerClientThumbnailSize { get; set; }
+		Dictionary<string, bool> CycleGroupExclusions { get; set; }
 
         bool MinimizeToTray { get; set; }
         bool DarkMode { get; set; }
