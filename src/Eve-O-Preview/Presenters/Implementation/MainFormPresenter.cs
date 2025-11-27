@@ -138,15 +138,15 @@ namespace EveOPreview.Presenters
 
             this.View.ThumbnailOpacity = this._configuration.ThumbnailOpacity;
 
-            this.View.EnableClientLayoutTracking = this._configuration.EnableClientLayoutTracking;
-            this.View.HideActiveClientThumbnail = this._configuration.HideActiveClientThumbnail;
-            this.View.MinimizeInactiveClients = this._configuration.MinimizeInactiveClients;
-            this.View.HideCaptionOnClients = this._configuration.HideCaptionOnClients;
-            this.View.WindowsAnimationStyle = ViewAnimationStyleConverter.Convert(this._configuration.WindowsAnimationStyle);
-            this.View.ShowThumbnailsAlwaysOnTop = this._configuration.ShowThumbnailsAlwaysOnTop;
-            this.View.PreventPreviews = this._configuration.PreventPreviews;
-            this.View.HideThumbnailsOnLostFocus = this._configuration.HideThumbnailsOnLostFocus;
-            this.View.EnablePerClientThumbnailLayouts = this._configuration.EnablePerClientThumbnailLayouts;
+			this.View.EnableClientLayoutTracking = this._configuration.EnableClientLayoutTracking;
+			this.View.HideActiveClientThumbnail = this._configuration.HideActiveClientThumbnail;
+			this.View.MinimizeInactiveClients = this._configuration.MinimizeInactiveClients;
+			this.View.CaptionOnClientsStyle = ViewCaptionBarStyleConverter.Convert(this._configuration.CaptionOnClientsStyle);
+			this.View.WindowsAnimationStyle = ViewAnimationStyleConverter.Convert(this._configuration.WindowsAnimationStyle);
+			this.View.ShowThumbnailsAlwaysOnTop = this._configuration.ShowThumbnailsAlwaysOnTop;
+			this.View.PreventPreviews = this._configuration.PreventPreviews;
+			this.View.HideThumbnailsOnLostFocus = this._configuration.HideThumbnailsOnLostFocus;
+			this.View.EnablePerClientThumbnailLayouts = this._configuration.EnablePerClientThumbnailLayouts;
 
             this.View.SetThumbnailSizeLimitations(this._configuration.ThumbnailMinimumSize, this._configuration.ThumbnailMaximumSize);
             this.View.ThumbnailSize = this._configuration.ThumbnailSize;
@@ -186,13 +186,12 @@ namespace EveOPreview.Presenters
             this._configuration.HideActiveClientThumbnail = this.View.HideActiveClientThumbnail;
             this._configuration.MinimizeInactiveClients = this.View.MinimizeInactiveClients;
 
-            if (this._configuration.HideCaptionOnClients != this.View.HideCaptionOnClients)
-            {
-                this._configuration.HideCaptionOnClients = this.View.HideCaptionOnClients;
-                await this._mediator.Publish(new ThumbnailFrameSettingsUpdated());
-            }
-            this._configuration.WindowsAnimationStyle = ViewAnimationStyleConverter.Convert(this.View.WindowsAnimationStyle);
-            this._configuration.ShowThumbnailsAlwaysOnTop = this.View.ShowThumbnailsAlwaysOnTop;
+			this._configuration.WindowsAnimationStyle = ViewAnimationStyleConverter.Convert(this.View.WindowsAnimationStyle);
+
+			this._configuration.CaptionOnClientsStyle= ViewCaptionBarStyleConverter.Convert(this.View.CaptionOnClientsStyle);
+			await this._mediator.Publish(new ThumbnailFrameSettingsUpdated());
+
+			this._configuration.ShowThumbnailsAlwaysOnTop = this.View.ShowThumbnailsAlwaysOnTop;
 
             if (this._configuration.PreventPreviews != this.View.PreventPreviews)
             {

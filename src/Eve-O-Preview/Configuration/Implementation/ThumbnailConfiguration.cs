@@ -105,14 +105,14 @@ namespace EveOPreview.Configuration.Implementation
 
             this.ThumbnailOpacity = 0.5;
 
-            this.EnableClientLayoutTracking = false;
-            this.HideActiveClientThumbnail = false;
-            this.HideLoginClientThumbnail = false;
-            this.MinimizeInactiveClients = false;
-            this.HideCaptionOnClients = false;
-            this.WindowsAnimationStyle = AnimationStyle.NoAnimation;
-            this.ShowThumbnailsAlwaysOnTop = true;
-            this.EnablePerClientThumbnailLayouts = false;
+			this.EnableClientLayoutTracking = false;
+			this.HideActiveClientThumbnail = false;
+			this.HideLoginClientThumbnail = false;
+			this.MinimizeInactiveClients = false;
+			this.CaptionOnClientsStyle = CaptionBarStyle.DoNothing;
+			this.WindowsAnimationStyle = AnimationStyle.NoAnimation;
+			this.ShowThumbnailsAlwaysOnTop = true;
+			this.EnablePerClientThumbnailLayouts = false;
 
             this.HideThumbnailsOnLostFocus = false;
             this.PreventPreviews = false;
@@ -270,12 +270,12 @@ namespace EveOPreview.Configuration.Implementation
             }
         }
 
-        public bool HideActiveClientThumbnail { get; set; }
-        public bool HideLoginClientThumbnail { get; set; }
-        public bool MinimizeInactiveClients { get; set; }
-        public bool HideCaptionOnClients { get; set; }
-        public AnimationStyle WindowsAnimationStyle { get; set; }
-        public bool ShowThumbnailsAlwaysOnTop { get; set; }
+		public bool HideActiveClientThumbnail { get; set; }
+		public bool HideLoginClientThumbnail { get; set; }
+		public bool MinimizeInactiveClients { get; set; }
+		public CaptionBarStyle CaptionOnClientsStyle { get; set; }
+		public AnimationStyle WindowsAnimationStyle { get; set; }
+		public bool ShowThumbnailsAlwaysOnTop { get; set; }
 
         public bool EnablePerClientThumbnailLayouts
         {

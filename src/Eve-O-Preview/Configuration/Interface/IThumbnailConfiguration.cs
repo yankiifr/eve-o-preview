@@ -25,14 +25,14 @@ namespace EveOPreview.Configuration
 
         double ThumbnailOpacity { get; set; }
 
-        bool EnableClientLayoutTracking { get; set; }
-        bool HideActiveClientThumbnail { get; set; }
-        bool HideLoginClientThumbnail { get; set; }
-        bool MinimizeInactiveClients { get; set; }
-        bool HideCaptionOnClients { get; set; }
-        AnimationStyle WindowsAnimationStyle { get; set; }
-        bool ShowThumbnailsAlwaysOnTop { get; set; }
-        bool EnablePerClientThumbnailLayouts { get; set; }
+		bool EnableClientLayoutTracking { get; set; }
+		bool HideActiveClientThumbnail { get; set; }
+		bool HideLoginClientThumbnail { get; set; }
+		bool MinimizeInactiveClients { get; set; }
+		CaptionBarStyle CaptionOnClientsStyle { get; set; }
+		AnimationStyle WindowsAnimationStyle { get; set; }
+		bool ShowThumbnailsAlwaysOnTop { get; set; }
+		bool EnablePerClientThumbnailLayouts { get; set; }
 
         bool PreventPreviews { get; set; }
         bool HideThumbnailsOnLostFocus { get; set; }

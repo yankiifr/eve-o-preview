@@ -943,19 +943,19 @@ namespace EveOPreview.Services
         }
         private void ApplyCaptionBar(IThumbnailView view)
 
-        {
-            if (view.Title == ThumbnailManager.DEFAULT_CLIENT_TITLE) return;
-            IntPtr handle = view.Id;
+		{
+			if (view.Title == ThumbnailManager.DEFAULT_CLIENT_TITLE) return;
+			if (this._configuration.CaptionOnClientsStyle == CaptionBarStyle.DoNothing) return;
 
-            bool enable = this._configuration.HideCaptionOnClients;
-            bool changed = false;
-            changed = changed | SetWindowStyle(view, InteropConstants.WS_CAPTION, enable);
-            changed = changed | SetWindowStyle(view, InteropConstants.WS_THICKFRAME, enable);
-        }
-        private void ApplyClientLayout(IThumbnailView view)
-        {
-            IntPtr clientHandle = view.Id;
-            string clientTitle = view.Title;
+			bool enable = (this._configuration.CaptionOnClientsStyle == CaptionBarStyle.ForceNoCaptionBar ? true : false) ;
+			bool changed = false;
+			changed = changed | SetWindowStyle(view, InteropConstants.WS_CAPTION, enable);
+			changed = changed | SetWindowStyle(view, InteropConstants.WS_THICKFRAME, enable);
+		}
+		private void ApplyClientLayout(IThumbnailView view)
+		{
+			IntPtr clientHandle = view.Id;
+			string clientTitle = view.Title;
 
             if (!this._configuration.EnableClientLayoutTracking)
             {

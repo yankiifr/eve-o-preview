@@ -73,8 +73,8 @@ namespace EveOPreview.View
             this.InitCycleGroupIndicatorMap();
             this.InitFormSize();
 
-            this.AnimationStyleCombo.DataSource = Enum.GetValues(typeof(AnimationStyle));
-
+			this.AnimationStyleCombo.DataSource = Enum.GetValues(typeof(AnimationStyle));
+			this.CaptionOnClientsStyleCombo.DataSource = Enum.GetValues(typeof(CaptionBarStyle));
             this.InitHotkeysTab();
             this.InitProfilesTab();
             this.InitThemeControls();
@@ -156,21 +156,21 @@ namespace EveOPreview.View
             set => this.HideActiveClientThumbnailCheckBox.Checked = value;
         }
 
-        public bool MinimizeInactiveClients
-        {
-            get => this.MinimizeInactiveClientsCheckBox.Checked;
-            set => this.MinimizeInactiveClientsCheckBox.Checked = value;
-        }
-        public bool HideCaptionOnClients
-        {
-            get => this.HideCaptionOnClientsCheckBox.Checked;
-            set => this.HideCaptionOnClientsCheckBox.Checked = value;
-        }
-        public ViewAnimationStyle WindowsAnimationStyle
-        {
-            get => (ViewAnimationStyle)this.AnimationStyleCombo.SelectedItem;
-            set => this.AnimationStyleCombo.SelectedIndex = (int)value;
-        }
+		public bool MinimizeInactiveClients
+		{
+			get => this.MinimizeInactiveClientsCheckBox.Checked;
+			set => this.MinimizeInactiveClientsCheckBox.Checked = value;
+		}
+		public ViewCaptionBarStyle CaptionOnClientsStyle
+		{
+			get => (ViewCaptionBarStyle)this.CaptionOnClientsStyleCombo.SelectedItem;
+			set => this.CaptionOnClientsStyleCombo.SelectedIndex = (int)value;
+		}
+		public ViewAnimationStyle WindowsAnimationStyle
+		{
+			get => (ViewAnimationStyle)this.AnimationStyleCombo.SelectedItem;
+			set => this.AnimationStyleCombo.SelectedIndex = (int)value;
+		}
 
         public bool ShowThumbnailsAlwaysOnTop
         {
