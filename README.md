@@ -416,10 +416,10 @@ You can build using :
 * StinkRay
 
 ### Translations by :
-HuntingFighter Oramara - German
-Ahikl - Chinese plus some of the language code/ideas !
-Atris Chastot - UnGrok'd polish
-AI (Grok) for other languages - if you think the translation is horrible - please DO help us out and send us better text!
+* HuntingFighter Oramara - German
+* Ahikl - Chinese plus some of the language code/ideas !
+* Atris Chastot - UnGrok'd polish
+* AI (Grok) for other languages - if you think the translation is horrible - please DO help us out and send us better text!
 
 ### With contributions from
 
