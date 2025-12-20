@@ -55,17 +55,6 @@ namespace EveOPreview.Configuration.Implementation
 			{
 				ApplyLocalization(v, $"{form.Name}");
 			}
-
-			/*
-			foreach (ToolStripItem item in this.TrayMenu.Items)
-			{
-				item.ApplyLocalization();
-			}
-
-			// Special cases for controls not handled by the extension method
-			this.NotifyIcon.Text = LocalizationManager.GetString("ApplicationTitleText");
-			*/
-
 		}
 
 		public static void ApplyLocalization(this Control control, string path)
