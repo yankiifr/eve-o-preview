@@ -145,6 +145,7 @@ Some of the application options are not exposed in the GUI. They can be adjusted
 
 | Option | Description |
 | --- | --- |
+| **Language** | Language code to use for GUI text. Supported values **en-US** (default), **de-DE** , **zh-CN**, **es-ES**, **fr-FR**, **ru-RU**, **pl-PL**, **nl-NL**, **sv-SE**, **da-DK**, **fi-FI**, **nb-NO** |
 | **ActiveClientHighlightThickness** | <div style="font-size: small">Thickness of the border used to highlight the active client's thumbnail.<br />Allowed values are **1**...**6**.<br />The default value is **3**<br />For example: **"ActiveClientHighlightThickness": 3**</div> |
 | **CompatibilityMode** | <div style="font-size: small">Enables the alternative render mode (see below)<br />The default value is **false**<br />For example: **"CompatibilityMode": true**</div> |
 | **EnableThumbnailSnap** | <div style="font-size: small">Allows to disable thumbnails snap feature by setting its value to **false**<br />The default value is **true**<br />For example: **"EnableThumbnailSnap": true**</div> |
@@ -414,6 +415,10 @@ You can build using :
 
 * StinkRay
 
+### Translations by :
+HuntingFighter Oramara - German
+Ahikl - Chinese plus some of the language code/ideas !
+AI (Grok) for other languages - if you think the translation is horrible - please DO help us out and send us better text!
 
 ### With contributions from
 

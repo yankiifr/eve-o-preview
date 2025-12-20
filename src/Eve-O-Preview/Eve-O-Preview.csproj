@@ -116,7 +116,7 @@
     <EmbeddedResource Remove="AboutBox.resx" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="EVE-O-Preview.local">
+    <None Update="EVE-O-Preview.locale">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

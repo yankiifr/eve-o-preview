@@ -17,7 +17,7 @@ namespace EveOPreview.Configuration.Implementation
 
 		private static Dictionary<string, Dictionary<string, string>> _localizations;
 		private static string _currentLanguage;
-		private const string LOCALIZATION_FILENAME = "EVE-O-Preview.local";
+		private const string LOCALIZATION_FILENAME = "EVE-O-Preview.locale";
 
 		static LocalizationExtensions()
 		{
