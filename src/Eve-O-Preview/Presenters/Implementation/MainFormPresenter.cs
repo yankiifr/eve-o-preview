@@ -5,7 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using EveOPreview.Configuration;
+using EveOPreview.Configuration.Implementation;
 using EveOPreview.Mediator.Messages;
+using EveOPreview.Properties;
 using EveOPreview.View;
 using MediatR;
 
@@ -132,8 +134,12 @@ namespace EveOPreview.Presenters
         {
             this._configurationStorage.Load();
 
-            this.View.ApplyTheme(this._configuration.DarkMode);
+			if (!string.IsNullOrEmpty(this._configuration.Language) && this._configuration.Language != "en-US")
+			{
+				LocalizationExtensions.SetLanguage(this._configuration.Language);
+			}
 
+            this.View.ApplyTheme(this._configuration.DarkMode);
             this.View.MinimizeToTray = this._configuration.MinimizeToTray;
 
             this.View.ThumbnailOpacity = this._configuration.ThumbnailOpacity;
@@ -170,11 +176,11 @@ namespace EveOPreview.Presenters
             this.View.OverlayLabelColor = this._configuration.OverlayLabelColor;
             this.View.OverlayLabelFont = this._configuration.OverlayLabelFont;
 
+			this.View.IconName = this._configuration.IconName;
 
-            this.View.IconName = this._configuration.IconName;
-
+			this.View.InitializeLanguageControls();
             this.PushCycleGroupsToView();
-        }
+		}
 
         private async void SaveApplicationSettings()
         {

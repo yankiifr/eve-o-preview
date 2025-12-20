@@ -39,8 +39,8 @@ namespace EveOPreview.View
 			TabControl ContentTabControl;
 			TabPage GeneralTabPage;
 			Panel GeneralSettingsPanel;
-			Label label6;
-			Label label4;
+			Label captionBarStyleLabel;
+			Label animationStyleLabel;
 			TabPage ThumbnailTabPage;
 			Panel ThumbnailSettingsPanel;
 			Label HeigthLabel;
@@ -70,7 +70,7 @@ namespace EveOPreview.View
 			HideThumbnailsOnLostFocusCheckBox = new CheckBox();
 			EnablePerClientThumbnailsLayoutsCheckBox = new CheckBox();
 			MinimizeToTrayCheckBox = new CheckBox();
-			label1 = new Label();
+			DoNotDisplayPreviewColour = new Label();
 			PreventPreviewColorButton = new Panel();
 			PreventPreviewsCheckBox = new CheckBox();
 			ThumbnailSnapToGridCheckBox = new CheckBox();
@@ -95,7 +95,7 @@ namespace EveOPreview.View
 			ZoomAanchorSWRadioButton = new RadioButton();
 			EnableThumbnailZoomCheckBox = new CheckBox();
 			ThumbnailZoomFactorNumericEdit = new NumericUpDown();
-			label5 = new Label();
+			CycleGroupIndicatorPositionLabel = new Label();
 			panel2 = new Panel();
 			CycleGroupIndicatorNWRadioButton = new RadioButton();
 			CycleGroupIndicatorNRadioButton = new RadioButton();
@@ -108,8 +108,8 @@ namespace EveOPreview.View
 			CycleGroupIndicatorSWRadioButton = new RadioButton();
 			LabelOverlayLabelFont = new Label();
 			btnLabelFont = new Button();
-			label3 = new Label();
-			label2 = new Label();
+			OverlayPositionLabel = new Label();
+			OverlayLabelColourLabel = new Label();
 			OverlayLabelColorButton = new Panel();
 			panel1 = new Panel();
 			OverlayLabelNWRadioButton = new RadioButton();
@@ -138,8 +138,8 @@ namespace EveOPreview.View
 			ContentTabControl = new TabControl();
 			GeneralTabPage = new TabPage();
 			GeneralSettingsPanel = new Panel();
-			label6 = new Label();
-			label4 = new Label();
+			captionBarStyleLabel = new Label();
+			animationStyleLabel = new Label();
 			ThumbnailTabPage = new TabPage();
 			ThumbnailSettingsPanel = new Panel();
 			HeigthLabel = new Label();
@@ -247,9 +247,9 @@ namespace EveOPreview.View
 			// GeneralSettingsPanel
 			// 
 			GeneralSettingsPanel.BorderStyle = BorderStyle.FixedSingle;
-			GeneralSettingsPanel.Controls.Add(label6);
+			GeneralSettingsPanel.Controls.Add(captionBarStyleLabel);
 			GeneralSettingsPanel.Controls.Add(CaptionOnClientsStyleCombo);
-			GeneralSettingsPanel.Controls.Add(label4);
+			GeneralSettingsPanel.Controls.Add(animationStyleLabel);
 			GeneralSettingsPanel.Controls.Add(AnimationStyleCombo);
 			GeneralSettingsPanel.Controls.Add(MinimizeInactiveClientsCheckBox);
 			GeneralSettingsPanel.Controls.Add(EnableClientLayoutTrackingCheckBox);
@@ -265,15 +265,15 @@ namespace EveOPreview.View
 			GeneralSettingsPanel.Size = new Size(510, 396);
 			GeneralSettingsPanel.TabIndex = 18;
 			// 
-			// label6
+			// captionBarStyleLabel
 			// 
-			label6.AutoSize = true;
-			label6.Location = new Point(9, 205);
-			label6.Margin = new Padding(6, 0, 6, 0);
-			label6.Name = "label6";
-			label6.Size = new Size(142, 25);
-			label6.TabIndex = 30;
-			label6.Text = "Captionbar Style";
+			captionBarStyleLabel.AutoSize = true;
+			captionBarStyleLabel.Location = new Point(9, 205);
+			captionBarStyleLabel.Margin = new Padding(6, 0, 6, 0);
+			captionBarStyleLabel.Name = "captionBarStyleLabel";
+			captionBarStyleLabel.Size = new Size(142, 25);
+			captionBarStyleLabel.TabIndex = 30;
+			captionBarStyleLabel.Text = "Captionbar Style";
 			// 
 			// CaptionOnClientsStyleCombo
 			// 
@@ -286,15 +286,15 @@ namespace EveOPreview.View
 			CaptionOnClientsStyleCombo.TabIndex = 29;
 			CaptionOnClientsStyleCombo.SelectedIndexChanged += OptionChanged_Handler;
 			// 
-			// label4
+			// animationStyleLabel
 			// 
-			label4.AutoSize = true;
-			label4.Location = new Point(9, 160);
-			label4.Margin = new Padding(6, 0, 6, 0);
-			label4.Name = "label4";
-			label4.Size = new Size(136, 25);
-			label4.TabIndex = 27;
-			label4.Text = "Animation Style";
+			animationStyleLabel.AutoSize = true;
+			animationStyleLabel.Location = new Point(9, 160);
+			animationStyleLabel.Margin = new Padding(6, 0, 6, 0);
+			animationStyleLabel.Name = "animationStyleLabel";
+			animationStyleLabel.Size = new Size(136, 25);
+			animationStyleLabel.TabIndex = 27;
+			animationStyleLabel.Text = "Animation Style";
 			// 
 			// AnimationStyleCombo
 			// 
@@ -415,7 +415,7 @@ namespace EveOPreview.View
 			// ThumbnailSettingsPanel
 			// 
 			ThumbnailSettingsPanel.BorderStyle = BorderStyle.FixedSingle;
-			ThumbnailSettingsPanel.Controls.Add(label1);
+			ThumbnailSettingsPanel.Controls.Add(DoNotDisplayPreviewColour);
 			ThumbnailSettingsPanel.Controls.Add(PreventPreviewColorButton);
 			ThumbnailSettingsPanel.Controls.Add(PreventPreviewsCheckBox);
 			ThumbnailSettingsPanel.Controls.Add(ThumbnailSnapToGridCheckBox);
@@ -437,15 +437,15 @@ namespace EveOPreview.View
 			ThumbnailSettingsPanel.Size = new Size(510, 396);
 			ThumbnailSettingsPanel.TabIndex = 19;
 			// 
-			// label1
+			// DoNotDisplayPreviewColour
 			// 
-			label1.AutoSize = true;
-			label1.Location = new Point(250, 282);
-			label1.Margin = new Padding(6, 0, 6, 0);
-			label1.Name = "label1";
-			label1.Size = new Size(55, 25);
-			label1.TabIndex = 35;
-			label1.Text = "Color";
+			DoNotDisplayPreviewColour.AutoSize = true;
+			DoNotDisplayPreviewColour.Location = new Point(250, 282);
+			DoNotDisplayPreviewColour.Margin = new Padding(6, 0, 6, 0);
+			DoNotDisplayPreviewColour.Name = "DoNotDisplayPreviewColour";
+			DoNotDisplayPreviewColour.Size = new Size(55, 25);
+			DoNotDisplayPreviewColour.TabIndex = 35;
+			DoNotDisplayPreviewColour.Text = "Color";
 			// 
 			// PreventPreviewColorButton
 			// 
@@ -833,12 +833,12 @@ namespace EveOPreview.View
 			// OverlaySettingsPanel
 			// 
 			OverlaySettingsPanel.BorderStyle = BorderStyle.FixedSingle;
-			OverlaySettingsPanel.Controls.Add(label5);
+			OverlaySettingsPanel.Controls.Add(CycleGroupIndicatorPositionLabel);
 			OverlaySettingsPanel.Controls.Add(panel2);
 			OverlaySettingsPanel.Controls.Add(LabelOverlayLabelFont);
 			OverlaySettingsPanel.Controls.Add(btnLabelFont);
-			OverlaySettingsPanel.Controls.Add(label3);
-			OverlaySettingsPanel.Controls.Add(label2);
+			OverlaySettingsPanel.Controls.Add(OverlayPositionLabel);
+			OverlaySettingsPanel.Controls.Add(OverlayLabelColourLabel);
 			OverlaySettingsPanel.Controls.Add(OverlayLabelColorButton);
 			OverlaySettingsPanel.Controls.Add(panel1);
 			OverlaySettingsPanel.Controls.Add(HighlightColorLabel);
@@ -853,15 +853,15 @@ namespace EveOPreview.View
 			OverlaySettingsPanel.Size = new Size(522, 410);
 			OverlaySettingsPanel.TabIndex = 25;
 			// 
-			// label5
+			// CycleGroupIndicatorPositionLabel
 			// 
-			label5.AutoSize = true;
-			label5.Location = new Point(173, 52);
-			label5.Margin = new Padding(6, 0, 6, 0);
-			label5.Name = "label5";
-			label5.Size = new Size(251, 25);
-			label5.TabIndex = 47;
-			label5.Text = "Cycle Group Indicator Position";
+			CycleGroupIndicatorPositionLabel.AutoSize = true;
+			CycleGroupIndicatorPositionLabel.Location = new Point(241, 51);
+			CycleGroupIndicatorPositionLabel.Margin = new Padding(6, 0, 6, 0);
+			CycleGroupIndicatorPositionLabel.Name = "CycleGroupIndicatorPositionLabel";
+			CycleGroupIndicatorPositionLabel.Size = new Size(251, 25);
+			CycleGroupIndicatorPositionLabel.TabIndex = 47;
+			CycleGroupIndicatorPositionLabel.Text = "Cycle Group Indicator Position";
 			// 
 			// panel2
 			// 
@@ -1009,25 +1009,25 @@ namespace EveOPreview.View
 			btnLabelFont.UseVisualStyleBackColor = true;
 			btnLabelFont.Click += btnLabelFont_Click;
 			// 
-			// label3
+			// OverlayPositionLabel
 			// 
-			label3.AutoSize = true;
-			label3.Location = new Point(337, 237);
-			label3.Margin = new Padding(6, 0, 6, 0);
-			label3.Name = "label3";
-			label3.Size = new Size(75, 25);
-			label3.TabIndex = 43;
-			label3.Text = "Position";
+			OverlayPositionLabel.AutoSize = true;
+			OverlayPositionLabel.Location = new Point(337, 237);
+			OverlayPositionLabel.Margin = new Padding(6, 0, 6, 0);
+			OverlayPositionLabel.Name = "OverlayPositionLabel";
+			OverlayPositionLabel.Size = new Size(75, 25);
+			OverlayPositionLabel.TabIndex = 43;
+			OverlayPositionLabel.Text = "Position";
 			// 
-			// label2
+			// OverlayLabelColourLabel
 			// 
-			label2.AutoSize = true;
-			label2.Location = new Point(9, 345);
-			label2.Margin = new Padding(6, 0, 6, 0);
-			label2.Name = "label2";
-			label2.Size = new Size(55, 25);
-			label2.TabIndex = 42;
-			label2.Text = "Color";
+			OverlayLabelColourLabel.AutoSize = true;
+			OverlayLabelColourLabel.Location = new Point(9, 345);
+			OverlayLabelColourLabel.Margin = new Padding(6, 0, 6, 0);
+			OverlayLabelColourLabel.Name = "OverlayLabelColourLabel";
+			OverlayLabelColourLabel.Size = new Size(55, 25);
+			OverlayLabelColourLabel.TabIndex = 42;
+			OverlayLabelColourLabel.Text = "Color";
 			// 
 			// OverlayLabelColorButton
 			// 
@@ -1481,8 +1481,8 @@ namespace EveOPreview.View
         private NumericUpDown ThumbnailSnapToGridSizeXNumericEdit;
         private Label SnapXLabel;
         private CheckBox ThumbnailSnapToGridCheckBox;
-        private Label label3;
-        private Label label2;
+        private Label OverlayPositionLabel;
+        private Label OverlayLabelColourLabel;
         private Panel OverlayLabelColorButton;
         private Panel panel1;
         private RadioButton OverlayLabelNWRadioButton;
@@ -1498,9 +1498,9 @@ namespace EveOPreview.View
 		private Button btnLabelFont;
 		private Label LabelOverlayLabelFont;
 		private CheckBox PreventPreviewsCheckBox;
-		private Label label1;
+		private Label DoNotDisplayPreviewColour;
 		private Panel PreventPreviewColorButton;
-		private Label label5;
+		private Label CycleGroupIndicatorPositionLabel;
 		private Panel panel2;
 		private RadioButton CycleGroupIndicatorNWRadioButton;
 		private RadioButton CycleGroupIndicatorNRadioButton;

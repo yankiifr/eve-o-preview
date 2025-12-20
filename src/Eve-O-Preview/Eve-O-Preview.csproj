@@ -115,4 +115,9 @@
     <Compile Remove="AboutBox.Designer.cs" />
     <EmbeddedResource Remove="AboutBox.resx" />
   </ItemGroup>
+  <ItemGroup>
+    <None Update="EVE-O-Preview.local">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

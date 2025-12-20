@@ -6,13 +6,14 @@ using System.Windows.Forms;
 
 namespace EveOPreview.View
 {
-    /// <summary>
-    /// Main view interface
-    /// Presenter uses it to access GUI properties
-    /// </summary>
-    public interface IMainFormView : IView
-    {
-        bool MinimizeToTray { get; set; }
+	/// <summary>
+	/// Main view interface
+	/// Presenter uses it to access GUI properties
+	/// </summary>
+	public interface IMainFormView : IView
+	{
+		string Language { get; set; }
+		bool MinimizeToTray { get; set; }
 
         double ThumbnailOpacity { get; set; }
 
@@ -60,7 +61,9 @@ namespace EveOPreview.View
         void RemoveThumbnails(IList<IThumbnailDescription> thumbnails);
         void RefreshZoomSettings();
 
-        Action ApplicationExitRequested { get; set; }
+		void InitializeLanguageControls();
+
+		Action ApplicationExitRequested { get; set; }
         Action FormActivated { get; set; }
         Action FormMinimized { get; set; }
         Action<ViewCloseRequest> FormCloseRequested { get; set; }

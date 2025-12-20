@@ -18,14 +18,16 @@ namespace EveOPreview.Configuration.Implementation
         {
             this.ConfigVersion = 1;
 
-            this.CycleGroup1ForwardHotkeys = new List<string> { "F14", "Control+F14" };
-            this.CycleGroup1BackwardHotkeys = new List<string> { "F13", "Control+F13" };
-            this.CycleGroup1ClientsOrder = new Dictionary<string, int>
-            {
-                { "EVE - Example DPS Toon 1", 1 },
-                { "EVE - Example DPS Toon 2", 2 },
-                { "EVE - Example DPS Toon 3", 3 }
-            };
+			this.Language = "en-US";
+
+			this.CycleGroup1ForwardHotkeys = new List<string> { "F14", "Control+F14" };
+			this.CycleGroup1BackwardHotkeys = new List<string> { "F13", "Control+F13" };
+			this.CycleGroup1ClientsOrder = new Dictionary<string, int>
+			{
+				{ "EVE - Example DPS Toon 1", 1 },
+				{ "EVE - Example DPS Toon 2", 2 },
+				{ "EVE - Example DPS Toon 3", 3 }
+			};
 
             this.CycleGroup2ForwardHotkeys = new List<string> { "F16", "Control+F16" };
             this.CycleGroup2BackwardHotkeys = new List<string> { "F15", "Control+F15" };
@@ -163,8 +165,11 @@ namespace EveOPreview.Configuration.Implementation
         [JsonProperty("ConfigVersion")]
         public int ConfigVersion { get; set; }
 
-        [JsonIgnore]
-        public Dictionary<string, bool> CycleGroupExclusions { get; set; }
+		[JsonProperty("Language")]
+		public string Language { get; set; }
+
+		[JsonIgnore]
+		public Dictionary<string, bool> CycleGroupExclusions { get; set; }
 
         [JsonProperty("CycleGroup1ForwardHotkeys")]
         public List<string> CycleGroup1ForwardHotkeys { get; set; }

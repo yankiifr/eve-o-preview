@@ -1,5 +1,5 @@
 using EveOPreview.Configuration;
-using EveOPreview.Properties;
+using EveOPreview.Configuration.Implementation;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -125,20 +125,26 @@ namespace EveOPreview.View
             }
         }
 
-        public double ThumbnailOpacity
-        {
-            get => Math.Min(this.ThumbnailOpacityTrackBar.Value / 100.00, 1.00);
-            set
-            {
-                int barValue = (int)(100.0 * value);
-                if (barValue > 100)
-                {
-                    barValue = 100;
-                }
-                else if (barValue < 10)
-                {
-                    barValue = 10;
-                }
+		public string Language
+		{
+			get => "en-US";
+			set => this.Language = value;
+		}
+
+		public double ThumbnailOpacity
+		{
+			get => Math.Min(this.ThumbnailOpacityTrackBar.Value / 100.00, 1.00);
+			set
+			{
+				int barValue = (int)(100.0 * value);
+				if (barValue > 100)
+				{
+					barValue = 100;
+				}
+				else if (barValue < 10)
+				{
+					barValue = 10;
+				}
 
                 this.ThumbnailOpacityTrackBar.Value = barValue;
             }
@@ -1483,6 +1489,25 @@ namespace EveOPreview.View
 
             this.OptionChanged_Handler(sender, e);
 
-        }
-    }
+		}
+
+		public void InitializeLanguageControls()
+		{
+			//InitializeLanguageCombo();
+			LocalizationExtensions.ApplyLocalization(this);
+			this.NotifyIcon.Text = LocalizationExtensions.GetString($"{this.Name}.NotifyIcon", this.NotifyIcon.Text);
+			foreach(var v in this.TrayMenu.Items)
+			{
+				try
+				{
+					ToolStripMenuItem f = (ToolStripMenuItem)v;
+					f.Text = LocalizationExtensions.GetString($"{this.Name}.{f.Name}", f.Text);
+				}
+				catch
+				{
+				}
+			}
+		}
+
+	}
 }

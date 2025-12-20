@@ -6,8 +6,11 @@ namespace EveOPreview.Configuration
 {
     public interface IThumbnailConfiguration
     {
-        // Unlimited, named cycle groups (replaces the former fixed CycleGroup1..5 properties).
-        List<CycleGroupConfiguration> CycleGroups { get; set; }
+
+		string Language { get; set; }
+
+		// Unlimited, named cycle groups (replaces the former fixed CycleGroup1..5 properties).
+		List<CycleGroupConfiguration> CycleGroups { get; set; }
 
 
 		Dictionary<string, Color> PerClientActiveClientHighlightColor { get; set; }
