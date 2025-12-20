@@ -135,6 +135,8 @@ namespace EveOPreview.Configuration.Implementation
 			}
 			else if (control is ComboBox comboBox)
 			{
+				/*
+
 				// Special handling for language combo box
 				if (comboBox.Name == "LanguageCombo")
 				{
@@ -160,6 +162,7 @@ namespace EveOPreview.Configuration.Implementation
 							break;
 					}
 				}
+			    */
 			}
 			else if (control is Button button)
 			{
@@ -240,5 +243,15 @@ namespace EveOPreview.Configuration.Implementation
 			return current;
 		}
 
+
+		public static List<string> GetLanguages()
+		{
+			 List<string> configuredLanguages = new List<string>();
+			foreach(var l in _localizations )
+			{
+				configuredLanguages.Add(l.Key);
+			}
+			return configuredLanguages;
+		}
 	}
 }

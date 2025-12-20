@@ -127,8 +127,11 @@ namespace EveOPreview.View
 
 		public string Language
 		{
-			get => "en-US";
-			set => this.Language = value;
+			get => this.LanguageCombo.Text;
+			set
+			{
+				this.LanguageCombo.Text = value;
+			}
 		}
 
 		public double ThumbnailOpacity
@@ -1493,10 +1496,17 @@ namespace EveOPreview.View
 
 		public void InitializeLanguageControls()
 		{
-			//InitializeLanguageCombo();
+			if (LanguageCombo.Items.Count == 0)
+			{
+				foreach (var l in LocalizationExtensions.GetLanguages())
+				{
+					LanguageCombo.Items.Add(l);
+				}
+			}
+
 			LocalizationExtensions.ApplyLocalization(this);
 			this.NotifyIcon.Text = LocalizationExtensions.GetString($"{this.Name}.NotifyIcon", this.NotifyIcon.Text);
-			foreach(var v in this.TrayMenu.Items)
+			foreach (var v in this.TrayMenu.Items)
 			{
 				try
 				{
@@ -1509,5 +1519,25 @@ namespace EveOPreview.View
 			}
 		}
 
+		private void GeneralSettingsPanel_Paint(object sender, PaintEventArgs e)
+		{
+
+		}
+
+		private void LanguageCombo_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			if (this._suppressEvents)
+			{
+				return;
+			}
+			this.ApplicationSettingsChanged?.Invoke();
+			LocalizationExtensions.SetLanguage(Language);
+			InitializeLanguageControls();
+		}
+
+		private void LanguageTabPage_Click(object sender, EventArgs e)
+		{
+
+		}
 	}
 }

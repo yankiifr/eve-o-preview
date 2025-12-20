@@ -138,11 +138,13 @@ namespace EveOPreview.Presenters
 			{
 				LocalizationExtensions.SetLanguage(this._configuration.Language);
 			}
+			this.View.InitializeLanguageControls();
 
+			this.View.Language = this._configuration.Language;	
             this.View.ApplyTheme(this._configuration.DarkMode);
             this.View.MinimizeToTray = this._configuration.MinimizeToTray;
 
-            this.View.ThumbnailOpacity = this._configuration.ThumbnailOpacity;
+			this.View.ThumbnailOpacity = this._configuration.ThumbnailOpacity;
 
 			this.View.EnableClientLayoutTracking = this._configuration.EnableClientLayoutTracking;
 			this.View.HideActiveClientThumbnail = this._configuration.HideActiveClientThumbnail;
@@ -178,7 +180,6 @@ namespace EveOPreview.Presenters
 
 			this.View.IconName = this._configuration.IconName;
 
-			this.View.InitializeLanguageControls();
             this.PushCycleGroupsToView();
 		}
 
@@ -186,7 +187,11 @@ namespace EveOPreview.Presenters
         {
             this._configuration.MinimizeToTray = this.View.MinimizeToTray;
 
-            this._configuration.ThumbnailOpacity = (float)this.View.ThumbnailOpacity;
+			this._configuration.ThumbnailOpacity = (float)this.View.ThumbnailOpacity;
+
+			if (this._configuration.Language != this.View.Language) {
+				this._configuration.Language = this.View.Language;
+			}
 
             this._configuration.EnableClientLayoutTracking = this.View.EnableClientLayoutTracking;
             this._configuration.HideActiveClientThumbnail = this.View.HideActiveClientThumbnail;

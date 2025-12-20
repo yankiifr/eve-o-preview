@@ -127,6 +127,9 @@ namespace EveOPreview.View
 			ShowThumbnailOverlaysCheckBox = new CheckBox();
 			ShowThumbnailFramesCheckBox = new CheckBox();
 			ThumbnailsList = new CheckedListBox();
+			LanguageTabPage = new TabPage();
+			LanguageLabel = new Label();
+			LanguageCombo = new ComboBox();
 			VersionLabel = new Label();
 			DocumentationLink = new LinkLabel();
 			NotifyIcon = new NotifyIcon(components);
@@ -179,6 +182,7 @@ namespace EveOPreview.View
 			panel1.SuspendLayout();
 			ClientsTabPage.SuspendLayout();
 			ClientsPanel.SuspendLayout();
+			LanguageTabPage.SuspendLayout();
 			AboutTabPage.SuspendLayout();
 			AboutPanel.SuspendLayout();
 			TrayMenu.SuspendLayout();
@@ -218,6 +222,7 @@ namespace EveOPreview.View
 			ContentTabControl.Controls.Add(ZoomTabPage);
 			ContentTabControl.Controls.Add(OverlayTabPage);
 			ContentTabControl.Controls.Add(ClientsTabPage);
+			ContentTabControl.Controls.Add(LanguageTabPage);
 			ContentTabControl.Controls.Add(AboutTabPage);
 			ContentTabControl.Dock = DockStyle.Fill;
 			ContentTabControl.DrawMode = TabDrawMode.OwnerDrawFixed;
@@ -264,6 +269,7 @@ namespace EveOPreview.View
 			GeneralSettingsPanel.Name = "GeneralSettingsPanel";
 			GeneralSettingsPanel.Size = new Size(319, 235);
 			GeneralSettingsPanel.TabIndex = 18;
+			GeneralSettingsPanel.Paint += GeneralSettingsPanel_Paint;
 			// 
 			// captionBarStyleLabel
 			// 
@@ -1280,6 +1286,40 @@ namespace EveOPreview.View
 			ThumbnailsListLabel.TabIndex = 33;
 			ThumbnailsListLabel.Text = "Thumbnails (check to force hide)";
 			// 
+			// LanguageTabPage
+			// 
+			LanguageTabPage.Controls.Add(LanguageLabel);
+			LanguageTabPage.Controls.Add(LanguageCombo);
+			LanguageTabPage.Location = new Point(124, 4);
+			LanguageTabPage.Name = "LanguageTabPage";
+			LanguageTabPage.Padding = new Padding(3);
+			LanguageTabPage.Size = new Size(327, 243);
+			LanguageTabPage.TabIndex = 6;
+			LanguageTabPage.Text = "Language";
+			LanguageTabPage.UseVisualStyleBackColor = true;
+			LanguageTabPage.Click += LanguageTabPage_Click;
+			// 
+			// LanguageLabel
+			// 
+			LanguageLabel.AutoSize = true;
+			LanguageLabel.Location = new Point(17, 24);
+			LanguageLabel.Margin = new Padding(4, 0, 4, 0);
+			LanguageLabel.Name = "LanguageLabel";
+			LanguageLabel.Size = new Size(59, 15);
+			LanguageLabel.TabIndex = 2;
+			LanguageLabel.Text = "Language";
+			// 
+			// LanguageCombo
+			// 
+			LanguageCombo.DropDownStyle = ComboBoxStyle.DropDownList;
+			LanguageCombo.FormattingEnabled = true;
+			LanguageCombo.Location = new Point(141, 21);
+			LanguageCombo.Margin = new Padding(4);
+			LanguageCombo.Name = "LanguageCombo";
+			LanguageCombo.Size = new Size(177, 23);
+			LanguageCombo.TabIndex = 1;
+			LanguageCombo.SelectedIndexChanged += LanguageCombo_SelectedIndexChanged;
+			// 
 			// AboutTabPage
 			// 
 			AboutTabPage.BackColor = SystemColors.Control;
@@ -1435,6 +1475,8 @@ namespace EveOPreview.View
 			ClientsTabPage.ResumeLayout(false);
 			ClientsPanel.ResumeLayout(false);
 			ClientsPanel.PerformLayout();
+			LanguageTabPage.ResumeLayout(false);
+			LanguageTabPage.PerformLayout();
 			AboutTabPage.ResumeLayout(false);
 			AboutPanel.ResumeLayout(false);
 			AboutPanel.PerformLayout();
@@ -1514,5 +1556,8 @@ namespace EveOPreview.View
 		private RadioButton CycleGroupIndicatorERadioButton;
 		private RadioButton CycleGroupIndicatorSWRadioButton;
 		private ComboBox CaptionOnClientsStyleCombo;
+		private TabPage LanguageTabPage;
+		private Label LanguageLabel;
+		private ComboBox LanguageCombo;
 	}
 }

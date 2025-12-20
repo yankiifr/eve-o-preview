@@ -43,7 +43,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Restore",
-    "MainForm.ExitMenuItem": "Exit"
+    "MainForm.ExitMenuItem": "Exit",
+    "MainForm.ContentTabControl.LanguageTabPage": "Language",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Language",
   },
   "zh-CN": {
     "MainForm": "EVE-O-Preview zh-CN",
@@ -89,7 +91,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "恢复",
-    "MainForm.ExitMenuItem": "退出"
+    "MainForm.ExitMenuItem": "退出",
+    "MainForm.ContentTabControl.LanguageTabPage": "语言",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "语言",
   },
   "de-DE": {
     "MainForm": "EVE-O-Preview de-DE",
@@ -135,7 +139,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Wiederherstellen",
-    "MainForm.ExitMenuItem": "Schließen"
+    "MainForm.ExitMenuItem": "Schließen",
+    "MainForm.ContentTabControl.LanguageTabPage": "Sprache",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Sprache",
   },
   "es-ES": {
     "MainForm": "EVE-O-Preview es-ES",
@@ -181,7 +187,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Restaurar",
-    "MainForm.ExitMenuItem": "Salir"
+    "MainForm.ExitMenuItem": "Salir",
+    "MainForm.ContentTabControl.LanguageTabPage": "Idioma",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Idioma",
   },
   "fr-FR": {
     "MainForm": "EVE-O-Preview fr-FR",
@@ -227,7 +235,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Restaurer",
-    "MainForm.ExitMenuItem": "Quitter"
+    "MainForm.ExitMenuItem": "Quitter",
+    "MainForm.ContentTabControl.LanguageTabPage": "Langue",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Langue",
   },
     "ru-RU": {
       "MainForm": "EVE-O-Preview ru-RU",
@@ -273,7 +283,9 @@
       "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
       "MainForm.TitleMenuItem": "EVE-O-Preview",
       "MainForm.RestoreWindowMenuItem": "Восстановить",
-      "MainForm.ExitMenuItem": "Выход"
+      "MainForm.ExitMenuItem": "Выход",
+      "MainForm.ContentTabControl.LanguageTabPage": "язык",
+      "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "язык",
   },
   "pl-PL": {
     "MainForm": "EVE-O-Preview pl-PL",
@@ -319,7 +331,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Przywróć",
-    "MainForm.ExitMenuItem": "Zakończ"
+    "MainForm.ExitMenuItem": "Zakończ",
+    "MainForm.ContentTabControl.LanguageTabPage": "Język",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Język",
   },
 "nl-NL": {
     "MainForm": "EVE-O-Preview nl-NL",
@@ -365,7 +379,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Herstellen",
-    "MainForm.ExitMenuItem": "Afsluiten"
+    "MainForm.ExitMenuItem": "Afsluiten",
+    "MainForm.ContentTabControl.LanguageTabPage": "Taal",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Taal",
   },
   "sv-SE": {
     "MainForm": "EVE-O-Preview sv-SE",
@@ -411,7 +427,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Återställ",
-    "MainForm.ExitMenuItem": "Avsluta"
+    "MainForm.ExitMenuItem": "Avsluta",
+    "MainForm.ContentTabControl.LanguageTabPage": "Språk",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Språk",
   },
   "da-DK": {
     "MainForm": "EVE-O-Preview da-DK",
@@ -457,7 +475,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Gendan",
-    "MainForm.ExitMenuItem": "Afslut"
+    "MainForm.ExitMenuItem": "Afslut",
+    "MainForm.ContentTabControl.LanguageTabPage": "Sprog",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Sprog",
   },
   "fi-FI": {
     "MainForm": "EVE-O-Preview fi-FI",
@@ -503,7 +523,9 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Palauta",
-    "MainForm.ExitMenuItem": "Lopeta"
+    "MainForm.ExitMenuItem": "Lopeta",
+    "MainForm.ContentTabControl.LanguageTabPage": "Kieli",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Kieli",
   },
   "nb-NO": {
     "MainForm": "EVE-O-Preview nb-NO",
@@ -549,6 +571,8 @@
     "MainForm.ContentTabControl.AboutTabPage.NameLabel": "EVE-O-Preview",
     "MainForm.TitleMenuItem": "EVE-O-Preview",
     "MainForm.RestoreWindowMenuItem": "Gjenopprett",
-    "MainForm.ExitMenuItem": "Avslutt"
+    "MainForm.ExitMenuItem": "Avslutt",
+    "MainForm.ContentTabControl.LanguageTabPage": "Språk",
+    "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Språk",
   },
 }
