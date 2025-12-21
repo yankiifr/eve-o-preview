@@ -422,6 +422,7 @@ You can build using :
 * HuntingFighter Oramara - German
 * Ahikl - Chinese plus some of the language code/ideas !
 * Atris Chastot - UnGrok'd polish
+* LemonCreamPie - Dutch
 * AI (Grok) for other languages - if you think the translation is horrible - please DO help us out and send us better text!
 
 ### With contributions from
