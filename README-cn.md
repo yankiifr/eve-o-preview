@@ -1,3 +1,6 @@
+[![en](https://img.shields.io/badge/lang-en-red.svg)](README.md)
+[![cn](https://img.shields.io/badge/lang-cn-yellow.svg)](README-cn.md)
+
 ## EVE-O Preview 概述
 
 翻译 by CACX 混沌仲裁者 刺怒/StabberORVexor
