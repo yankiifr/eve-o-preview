@@ -29,13 +29,13 @@ namespace EveOPreview.Configuration.Implementation
 
 		private static void InitializeLocalizations()
 		{
+			_localizations = new Dictionary<string, Dictionary<string, string>>();
 			if (!File.Exists(LOCALIZATION_FILENAME))
 			{
 				return;
 			}
 
 			string rawData = File.ReadAllText(LOCALIZATION_FILENAME);
-			_localizations = new Dictionary<string, Dictionary<string, string>>();
 			JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
 			{
 				ObjectCreationHandling = ObjectCreationHandling.Replace
