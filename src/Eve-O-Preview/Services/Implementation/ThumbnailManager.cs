@@ -122,17 +122,29 @@ namespace EveOPreview.Services
             newClient.Value.Refresh(true);
         }
 
-        public void MinimizeAllClients()
-        {
-            foreach (var x in _thumbnailViews.Reverse())
-            {
-                this._windowManager.MinimizeWindow(x.Value.Id, this._configuration.WindowsAnimationStyle, false);
-            }
-        }
-        public void CycleNextClient(bool isForwards, Dictionary<string, int> cycleOrder)
-        {
-            IOrderedEnumerable<KeyValuePair<string, int>> clientOrder;
-            Dictionary<string, int> _cycleOrder = new Dictionary<string, int>(cycleOrder);
+		public void MinimizeAllClients()
+		{
+			foreach (var x in _thumbnailViews.Reverse())
+			{
+				this._windowManager.MinimizeWindow(x.Value.Id, this._configuration.WindowsAnimationStyle, false);
+			}
+		}
+		public void ShowAllClients()
+		{
+			foreach (var x in _thumbnailViews.Reverse())
+			{
+#if LINUX
+			this._windowManager.ActivateWindow(x.Value.Id, x.Value.Title);
+#else
+				this._windowManager.ActivateWindow(x.Value.Id, this._configuration.WindowsAnimationStyle);
+#endif
+			}
+		}
+
+		public void CycleNextClient(bool isForwards, Dictionary<string, int> cycleOrder)
+		{
+			IOrderedEnumerable<KeyValuePair<string, int>> clientOrder;
+			Dictionary<string, int> _cycleOrder = new Dictionary<string, int>(cycleOrder);
 
 			if ( _cycleOrder.Count == 0 ) 
 			{
