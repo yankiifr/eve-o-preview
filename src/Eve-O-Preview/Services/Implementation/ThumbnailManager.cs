@@ -987,15 +987,46 @@ namespace EveOPreview.Services
                 return;
             }
 
-            if (clientLayout.IsMaximized)
-            {
-                this._windowManager.MaximizeWindow(clientHandle);
-            }
-            else
-            {
-                this._windowManager.MoveWindow(clientHandle, clientLayout.X, clientLayout.Y, clientLayout.Width, clientLayout.Height);
-            }
-        }
+			if (clientLayout.IsMaximized)
+			{
+				this._windowManager.MoveWindow(clientHandle, clientLayout.X, clientLayout.Y, clientLayout.Width, clientLayout.Height);
+				this._windowManager.MaximizeWindow(clientHandle);
+			}
+			else
+			{
+				this._windowManager.MoveWindow(clientHandle, clientLayout.X, clientLayout.Y, clientLayout.Width, clientLayout.Height);
+			}
+
+			view.Title = clientTitle;
+		}
+
+		public void ApplyAllClientLayouts()
+		{
+			this.DisableViewEvents();
+			this.Stop();
+			//this._processMonitor.ClearAllProcesses();
+
+			var activeClient = this.GetActiveClient();
+
+			this.ShowAllClients();
+			foreach (KeyValuePair<IntPtr, IThumbnailView> entry in this._thumbnailViews)
+			{
+//				entry.Value.Close();
+				//this.ThumbnailActivated(entry.Value.Id);
+				//this.SwitchActiveClient(entry.Value.Id, entry.Value.Title);
+				this.ApplyClientLayout(entry.Value);
+			}
+			//			this._thumbnailViews.Clear();
+
+			this.EnableViewEvents();
+			if (activeClient != null)
+			{
+				this.ThumbnailActivated(activeClient.Id);
+				this.SwitchActiveClient(activeClient.Id, activeClient.Title);
+			}
+
+			this.Start();
+		}
 
         private void UpdateClientLayouts()
         {
