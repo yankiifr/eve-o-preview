@@ -46,7 +46,7 @@
     "MainForm.ExitMenuItem": "Exit",
     "MainForm.ContentTabControl.LanguageTabPage": "Language",
     "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "Language",
-  },
+},
   "zh-CN": {
     "MainForm": "EVE-O-Preview zh-CN",
     "MainForm.ContentTabControl.GeneralTabPage": "通用",
@@ -94,8 +94,14 @@
     "MainForm.ExitMenuItem": "退出",
     "MainForm.ContentTabControl.LanguageTabPage": "语言",
     "MainForm.ContentTabControl.LanguageTabPage.LanguageLabel": "语言",
+    "MainForm.ContentTabControl.CycleGroupTabPage": "循环分组",
+    "Messages.Error": "错误",
+    "MainForm.MenuConfigurationFile": "Configuration file",
+    "MainForm.MenuConfigurationFile.Reload": "Reload current config",
+    "MainForm.ContentTabControl.CycleGroupTabPage.HotkeyCaptureButton": "捕获",
+    "MainForm.ContentTabControl.CycleGroupTabPage.HotkeyCaptureButton_PressKey": "快捷键"
   },
-  "de-DE": {
+"de-DE": {
     "MainForm": "EVE-O-Preview de-DE",
     "MainForm.ContentTabControl.GeneralTabPage": "Allgemein",
     "MainForm.ContentTabControl.GeneralTabPage.captionBarStyleLabel": "Überschriftstil",
