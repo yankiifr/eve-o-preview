@@ -103,20 +103,24 @@ namespace EveOPreview.Services
             return _thumbnailViews.FirstOrDefault(x => x.Key == ptr).Value;
         }
 
-        public IThumbnailView GetActiveClient()
-        {
-            return GetClientByPointer(this._activeClient.Handle);
-        }
+		public IThumbnailView GetActiveClient()
+		{
+			return GetClientByPointer(this._activeClient.Handle);
+		}
+		public void SetActive(KeyValuePair<IntPtr, IThumbnailView> newClient)
+		{
+			System.Diagnostics.Debug.WriteLine($"SetActive {newClient.Value.Title}");
 
-        public void SetActive(KeyValuePair<IntPtr, IThumbnailView> newClient)
-        {
-            this.GetActiveClient()?.ClearBorder();
+			this.GetActiveClient()?.ClearBorder();
+
+/*
 #if LINUX
 			this._windowManager.ActivateWindow(newClient.Key, newClient.Value.Title);
 #else
             this._windowManager.ActivateWindow(newClient.Key, this._configuration.WindowsAnimationStyle);
 #endif
-            this.SwitchActiveClient(newClient.Key, newClient.Value.Title);
+*/
+			this.SwitchActiveClient(newClient.Key, newClient.Value.Title);
 
             newClient.Value.SetHighlight();
             newClient.Value.Refresh(true);
@@ -664,24 +668,29 @@ namespace EveOPreview.Services
             this._ignoreViewEvents = true;
         }
 
-        private void SwitchActiveClient(IntPtr foregroundClientHandle, string foregroundClientTitle)
-        {
-            // Check if any actions are needed
-            if (this._activeClient.Handle == foregroundClientHandle)
-            {
-                return;
-            }
+		private void SwitchActiveClient(IntPtr foregroundClientHandle, string foregroundClientTitle)
+		{
+			// Check if any actions are needed
+			if (this._activeClient.Handle == foregroundClientHandle)
+			{
+				return;
+			}
+			System.Diagnostics.Debug.WriteLine($"SwitchActiveClient {foregroundClientTitle}");
 
-            // Minimize the currently active client if needed
-            if (this._configuration.MinimizeInactiveClients && !this._configuration.IsPriorityClient(this._activeClient.Title))
-            {
-                this._windowManager.MinimizeWindow(this._activeClient.Handle, this._configuration.WindowsAnimationStyle, false);
 #if LINUX
    			    this._windowManager.ActivateWindow(foregroundClientHandle, foregroundClientTitle);
 #else
-                this._windowManager.ActivateWindow(foregroundClientHandle, this._configuration.WindowsAnimationStyle);
+			this._windowManager.ActivateWindow(foregroundClientHandle, this._configuration.WindowsAnimationStyle);
 #endif
-            }
+
+			// Minimize the currently active client if needed
+			if (this._configuration.MinimizeInactiveClients && !this._configuration.IsPriorityClient(this._activeClient.Title))
+			{
+				System.Diagnostics.Debug.WriteLine($"Calling MinimizeWindow {this._activeClient.Title}");
+
+					System.Threading.Thread.Sleep(20);
+					this._windowManager.MinimizeWindow(this._activeClient.Handle, this._configuration.WindowsAnimationStyle, false);
+			}
 
             this._activeClient = (foregroundClientHandle, foregroundClientTitle);
         }
@@ -729,8 +738,10 @@ namespace EveOPreview.Services
         {
             IThumbnailView view = this._thumbnailViews[id];
 
-            Task.Run(() =>
-            {
+			System.Diagnostics.Debug.WriteLine($"ThumbnailActivated {view.Title}");
+
+			Task.Run(() =>
+				{
 #if LINUX
 					this._windowManager.ActivateWindow(view.Id, view.Title);
 #else
@@ -746,10 +757,12 @@ namespace EveOPreview.Services
                 }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        private void ThumbnailDeactivated(IntPtr id, bool switchOut)
-        {
-            if (switchOut)
-            {
+		private void ThumbnailDeactivated(IntPtr id, bool switchOut)
+		{
+			System.Diagnostics.Debug.WriteLine($"ThumbnailDeactivated");
+
+			if (switchOut)
+			{
 #if LINUX
 				this._windowManager.ActivateWindow(this._externalApplication, null);
 #else

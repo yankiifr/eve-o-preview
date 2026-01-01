@@ -30,9 +30,8 @@ namespace EveOPreview.View
 			if ((this._thumbnail == null) || forceRefresh && ! this.IsPreventPreviews() )
 			{
 				this.RegisterThumbnail();
+				obsoleteThumbnail?.Unregister();
 			}
-			
-			obsoleteThumbnail?.Unregister();
 		}
 
 		protected override void ResizeThumbnail(int baseWidth, int baseHeight, int highlightWidthTop, int highlightWidthRight, int highlightWidthBottom, int highlightWidthLeft)
