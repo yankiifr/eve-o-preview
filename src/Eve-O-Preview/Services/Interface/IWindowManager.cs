@@ -10,9 +10,9 @@ namespace EveOPreview.Services
 
 		IntPtr GetForegroundWindowHandle();
 #if LINUX
-		void ActivateWindow(IntPtr handle, string windowName);
+		void ActivateWindow(IntPtr handle, string windowName, bool focus);
 #else
-		void ActivateWindow(IntPtr handle, AnimationStyle animation);
+		void ActivateWindow(IntPtr handle, AnimationStyle animation, bool focus);
 #endif
 		void MinimizeWindow(IntPtr handle, AnimationStyle animation, bool enableAnimation);
 		void MoveWindow(IntPtr handle, int left, int top, int width, int height);

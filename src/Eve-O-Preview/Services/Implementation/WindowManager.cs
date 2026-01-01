@@ -111,11 +111,12 @@ namespace EveOPreview.Services.Implementation
 
 		// if building for LINUX the window handling is slightly different
 #if LINUX
-		private void WindowsActivateWindow(IntPtr handle)
+		private void WindowsActivateWindow(IntPtr handle, bool focus)
 		{
-			User32NativeMethods.SetForegroundWindow(handle);
-			User32NativeMethods.SetFocus(handle);
-
+		    if ( focus) {
+				User32NativeMethods.SetForegroundWindow(handle);
+				User32NativeMethods.SetFocus(handle);
+            }
 			uint style = User32NativeMethods.GetWindowLong(handle, InteropConstants.GWL_STYLE);
 
 			if ((style & InteropConstants.WS_MINIMIZE) == InteropConstants.WS_MINIMIZE)
@@ -167,7 +168,7 @@ namespace EveOPreview.Services.Implementation
 			}
 		}
 
-        public void ActivateWindow(IntPtr handle, string windowName)
+        public void ActivateWindow(IntPtr handle, string windowName, bool focus)
         {
             if (this._enableWineCompatabilityMode)
             {
@@ -175,7 +176,7 @@ namespace EveOPreview.Services.Implementation
             }
             else
             {
-                this.WindowsActivateWindow(handle);
+                this.WindowsActivateWindow(handle, focus);
             }
         }
 
@@ -198,10 +199,13 @@ namespace EveOPreview.Services.Implementation
 #endif
 
 #if WINDOWS
-		public void ActivateWindow(IntPtr handle, AnimationStyle animation)
+		public void ActivateWindow(IntPtr handle, AnimationStyle animation, bool focus)
 		{
-			User32NativeMethods.SetForegroundWindow(handle);
-			User32NativeMethods.SetFocus(handle);
+			if (focus)
+			{
+				User32NativeMethods.SetForegroundWindow(handle);
+				User32NativeMethods.SetFocus(handle);
+			}
 
 			uint style = User32NativeMethods.GetWindowLong(handle, InteropConstants.GWL_STYLE);
 

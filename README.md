@@ -259,6 +259,13 @@ In a similar pattern to the per client Hotkey Setup, It is possible to set a key
     "F22"
   ],
 
+### Refresh all minimized clients with Hotkey Setup
+
+In a similar pattern to the per client Hotkey Setup, It is possible to set a key combinations to refresh all the minimized Eve Windows. EVE-O Preview doesn't provide any GUI to set the these hotkeys. It should be done via editing the configuration file directly. Don't forget to make a backup copy of the file before editing it.
+
+  "RefreshMinimizedClientsHotkeys": [
+    "Control+F21"
+  ],
 
 **Hints** 
 * Minimise the use of modifiers or standard keys to minimise issues with the client playing up. In the default example unusual Function keys (e.g. F14) are used which are then bound to a game pad or gaming mouse.

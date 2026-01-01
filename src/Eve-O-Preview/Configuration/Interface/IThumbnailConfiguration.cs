@@ -69,8 +69,9 @@ namespace EveOPreview.Configuration
         Color OverlayLabelColor { get; set; }
         Font OverlayLabelFont { get; set; }
 
-        string IconName { get; set; }
-        List<string> MinimizeAllClientsHotkeys { get; set; }
+		string IconName { get; set; }
+		List<string> MinimizeAllClientsHotkeys { get; set; }
+		List<string> RefreshMinimizedClientsHotkeys { get; set; }
 
         Point LoginThumbnailLocation { get; set; }
 

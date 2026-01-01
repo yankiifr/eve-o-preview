@@ -91,13 +91,14 @@ namespace EveOPreview.Configuration.Implementation
                 {"EVE - Example Toon 2", ZoomAnchor.S}
             };
 
-            this.PerClientLayout = new Dictionary<string, Dictionary<string, Point>>();
-            this.FlatLayout = new Dictionary<string, Point>();
-            this.ClientLayout = new Dictionary<string, ClientLayout>();
-            this.ClientHotkey = new Dictionary<string, string>();
-            this.MinimizeAllClientsHotkeys = new List<string> { "Control+F22" };
-            this.DisableThumbnail = new Dictionary<string, bool>();
-            this.PriorityClients = new List<string>();
+			this.PerClientLayout = new Dictionary<string, Dictionary<string, Point>>();
+			this.FlatLayout = new Dictionary<string, Point>();
+			this.ClientLayout = new Dictionary<string, ClientLayout>();
+			this.ClientHotkey = new Dictionary<string, string>();
+			this.MinimizeAllClientsHotkeys = new List<string> { "Control+F22" };
+			this.RefreshMinimizedClientsHotkeys = new List<string> { "Control+F21" };
+			this.DisableThumbnail = new Dictionary<string, bool>();
+			this.PriorityClients = new List<string>();
 
             this.ExecutablesToPreview = new List<string> { "exefile" };
 
@@ -344,22 +345,24 @@ namespace EveOPreview.Configuration.Implementation
         [JsonProperty("LoginThumbnailLocation")]
         public Point LoginThumbnailLocation { get; set; }
 
-        [JsonProperty]
-        private Dictionary<string, Dictionary<string, Point>> PerClientLayout { get; set; }
-        [JsonProperty]
-        private Dictionary<string, Point> FlatLayout { get; set; }
-        [JsonProperty]
-        private Dictionary<string, ClientLayout> ClientLayout { get; set; }
-        [JsonProperty]
-        private Dictionary<string, string> ClientHotkey { get; set; }
-        [JsonProperty]
-        public List<string> MinimizeAllClientsHotkeys { get; set; }
-        [JsonProperty]
-        private Dictionary<string, bool> DisableThumbnail { get; set; }
-        [JsonProperty]
-        private List<string> PriorityClients { get; set; }
-        [JsonProperty]
-        private List<string> ExecutablesToPreview { get; set; }
+		[JsonProperty]
+		private Dictionary<string, Dictionary<string, Point>> PerClientLayout { get; set; }
+		[JsonProperty]
+		private Dictionary<string, Point> FlatLayout { get; set; }
+		[JsonProperty]
+		private Dictionary<string, ClientLayout> ClientLayout { get; set; }
+		[JsonProperty]
+		private Dictionary<string, string> ClientHotkey { get; set; }
+		[JsonProperty]
+		public List<string> MinimizeAllClientsHotkeys { get; set; }
+		[JsonProperty]
+		public List<string> RefreshMinimizedClientsHotkeys { get; set; }
+		[JsonProperty]
+		private Dictionary<string, bool> DisableThumbnail { get; set; }
+		[JsonProperty]
+		private List<string> PriorityClients { get; set; }
+		[JsonProperty]
+		private List<string> ExecutablesToPreview { get; set; }
 
         public Point GetThumbnailLocation(string currentClient, string activeClient, Point defaultLocation)
         {
