@@ -115,6 +115,8 @@ CCP Grimmi wrote:
 | Cycle Group Indicator Position | The position of Exclude from Cycle Group Indicator |
 | Label Font | The font name, style and size of the overlay label (Character Name) |
 | Label Color | The color of the Font for the Overlay Label |
+| Outline Color | The color of the outline of the for for the Overlay Label (if same as Label Color drawing method is original method) |
+| Outline Size | The size of the outline of the for for the Overlay Label (if 0 drawing method is original method) |
 | Position | The position of the overlay label in the thumbnail |
 
 #### **Active Clients** Tab
