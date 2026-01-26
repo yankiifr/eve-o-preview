@@ -175,6 +175,12 @@
   <data name="OverlaySettingsPanel.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>
+  <data name="label1.GenerateMember" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
+  <data name="CycleGroupLabel.GenerateMember" type="System.Boolean, mscorlib">
+    <value>False</value>
+  </data>
   <data name="ClientsTabPage.GenerateMember" type="System.Boolean, mscorlib">
     <value>False</value>
   </data>

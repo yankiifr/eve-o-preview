@@ -1,10 +1,12 @@
 ﻿using EveOPreview.Configuration;
 using EveOPreview.Services;
+using EveOPreview.View.Implementation;
 using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Windows;
 using System.Windows.Forms;
-using System.Windows.Shapes;
 using Rectangle = System.Drawing.Rectangle;
 
 namespace EveOPreview.View
@@ -125,18 +127,21 @@ namespace EveOPreview.View
 			}
 		}
 
-		public void SetPropertiesOverlayLabel(Font f, System.Drawing.Color c, ZoomAnchor anchor)
+		public void SetPropertiesOverlayLabel(Font font, System.Drawing.Color foregroundColour, System.Drawing.Color outlineColour, float outlineSize, ZoomAnchor anchor)
 		{
 			if (
-				this.OverlayLabel.Font.Size != f.Size ||
-				this.OverlayLabel.Font.FontFamily != f.FontFamily ||
-				this.OverlayLabel.Font.Italic != f.Italic ||
-				this.OverlayLabel.Font.Bold != f.Bold
+				this.OverlayLabel.Font.Size != font.Size ||
+				this.OverlayLabel.Font.FontFamily != font.FontFamily ||
+				this.OverlayLabel.Font.Italic != font.Italic ||
+				this.OverlayLabel.Font.Bold != font.Bold
 				)
 			{
-				this.OverlayLabel.Font = f;
+				this.OverlayLabel.Font = font;
 			}
-			this.OverlayLabel.ForeColor = c;
+			this.OverlayLabel.ForeColor = foregroundColour;
+			
+			this.OverlayLabel.BorderColor = outlineColour;
+			this.OverlayLabel.BorderSize = outlineSize;
 
 			int margin = 5;
 
@@ -188,6 +193,8 @@ namespace EveOPreview.View
 					this.OverlayLabel.TextAlign = System.Drawing.ContentAlignment.BottomRight;
 					break;
 			}
+			if (this.OverlayLabel.Top < 0) this.OverlayLabel.Top = 0;
+			if (this.OverlayLabel.Left < 0) this.OverlayLabel.Left = 0;
 		}
 
 		public void EnableOverlayLabel(bool enable)
@@ -197,12 +204,12 @@ namespace EveOPreview.View
 		}
 		public void EnableFakePreview(bool enable, bool resizeForHighlight, int highlightSize, Color bgColor)
 		{
-			bool IsLocationUpdateRequired(Point currentLocation, int left, int top)
+			bool IsLocationUpdateRequired(System.Drawing.Point currentLocation, int left, int top)
 			{
 				return (currentLocation.X != left) || (currentLocation.Y != top);
 			}
 
-			bool IsSizeUpdateRequired(Size currentSize, int width, int height)
+			bool IsSizeUpdateRequired(System.Drawing.Size currentSize, int width, int height)
 			{
 				return (currentSize.Width != width) || (currentSize.Height != height);
 			}
@@ -225,25 +232,94 @@ namespace EveOPreview.View
 			var top = 0 + highlightSize;
 			if (IsLocationUpdateRequired(OverlayAreaPictureBox.Location, left, top))
 			{
-				OverlayAreaPictureBox.Location = new Point(left, top);
+				OverlayAreaPictureBox.Location = new System.Drawing.Point(left, top);
 			}
 			var width = this.ClientSize.Width - (highlightSize * 2);
 			var height = this.ClientSize.Height - (highlightSize * 2);
 			if (IsSizeUpdateRequired(OverlayAreaPictureBox.Size, width, height))
 			{
-				OverlayAreaPictureBox.Size = new Size(width, height);
+				OverlayAreaPictureBox.Size = new System.Drawing.Size(width, height);
 			}
 		}
 
-		private void PaintDrawText(PaintEventArgs e, System.Windows.Forms.Label l)
+		private void PaintDrawText(PaintEventArgs e, BorderLabel l)
 		{
 			var flags = TextFormatFlags.Right;
 			if (l.TextAlign == ContentAlignment.TopLeft || l.TextAlign == ContentAlignment.BottomLeft || l.TextAlign == ContentAlignment.MiddleLeft) flags = TextFormatFlags.Left;
 			flags = flags | TextFormatFlags.WordBreak;
 
 			e.Graphics.TextRenderingHint = TextRenderingHint.AntiAlias;
+			e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
 
-			TextRenderer.DrawText(e.Graphics, l.Text, l.Font, new Rectangle(l.Left, l.Top, l.Width, l.Height), l.ForeColor, flags);
+
+			if ( l.ForeColor == l.BorderColor || l.BorderSize == 0 )
+			{
+				TextRenderer.DrawText(e.Graphics, l.Text, l.Font, new Rectangle(l.Left, l.Top, l.Width, l.Height), l.ForeColor, flags);
+				return;
+			}
+
+			float fontSize = e.Graphics.DpiY * l.Font.SizeInPoints / 72;
+			var drawSize = e.Graphics.MeasureString(l.Text, l.Font, new PointF(), StringFormat.GenericTypographic);
+			var drawPath = new GraphicsPath();
+			var drawPen = new Pen(new SolidBrush(l.BorderColor), l.BorderSize);
+			var forecolorBrush = new SolidBrush(l.ForeColor);
+			var point = new System.Drawing.Point();
+
+			int margin = 6;
+
+			if (l.AutoSize)
+			{
+				point.X = margin;
+				point.Y = margin;
+			}
+			else
+			{
+				// Text is Left-Aligned:
+				if (l.TextAlign == ContentAlignment.TopLeft ||
+					l.TextAlign == ContentAlignment.MiddleLeft ||
+					l.TextAlign == ContentAlignment.BottomLeft)
+					point.X = margin;
+
+				// Text is Center-Aligned
+				else if (l.TextAlign == ContentAlignment.TopCenter ||
+					l.TextAlign == ContentAlignment.MiddleCenter ||
+					l.TextAlign == ContentAlignment.BottomCenter)
+					point.X = (int)(l.Width - drawSize.Width) / 2;
+
+				// Text is Right-Aligned
+				else point.X = (int)( l.Width - (margin + drawSize.Width));
+
+				// Text is Top-Aligned
+				if (l.TextAlign == ContentAlignment.TopLeft ||
+					l.TextAlign == ContentAlignment.TopCenter ||
+					l.TextAlign == ContentAlignment.TopRight)
+					point.Y = margin;
+
+				// Text is Middle-Aligned
+				else if (l.TextAlign == ContentAlignment.MiddleLeft ||
+					l.TextAlign == ContentAlignment.MiddleCenter ||
+					l.TextAlign == ContentAlignment.MiddleRight)
+					point.Y = (int)((l.Height - drawSize.Height) / 2);
+
+				// Text is Bottom-Aligned
+				else point.Y = (int) (l.Height - (margin + drawSize.Height));
+			}
+			point.X += l.Location.X;
+			point.Y += l.Location.Y;
+
+			drawPath.Reset();
+			drawPath.AddString(l.Text, l.Font.FontFamily, (int)l.Font.Style, fontSize,point, StringFormat.GenericTypographic);
+			//drawPath.AddString(l.Text, l.Font.FontFamily, (int)l.Font.Style, fontSize, new Rectangle(l.Left, l.Top, l.Width, l.Height), StringFormat.GenericTypographic);
+
+			// And finally, using our pen, all we have to do now
+			//  is draw our graphics path to the screen. Voila!
+			e.Graphics.FillPath(forecolorBrush, drawPath);
+			e.Graphics.DrawPath(drawPen, drawPath);
+
+			drawPath.Dispose();
+			drawPen.Dispose();
+			forecolorBrush.Dispose();
+
 		}
 
 		private void OverlayAreaPictureBox_Paint(object sender, PaintEventArgs e)

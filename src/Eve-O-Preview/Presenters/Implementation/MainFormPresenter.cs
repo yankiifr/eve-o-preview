@@ -175,8 +175,10 @@ namespace EveOPreview.Presenters
             this.View.ActiveClientHighlightColor = this._configuration.ActiveClientHighlightColor;
             this.View.PreventPreviewColor = this._configuration.PreventPreviewColor;
 
-            this.View.OverlayLabelColor = this._configuration.OverlayLabelColor;
-            this.View.OverlayLabelFont = this._configuration.OverlayLabelFont;
+			this.View.OverlayLabelColor = this._configuration.OverlayLabelColor;
+			this.View.OverlayLabelFont = this._configuration.OverlayLabelFont;
+			this.View.OverlayLabelOutlineColor = this._configuration.OverlayLabelOutlineColor;
+			this.View.OverlayLabelOutlineSize = this._configuration.OverlayLabelOutlineSize;
 
 			this.View.IconName = this._configuration.IconName;
 
@@ -247,8 +249,10 @@ namespace EveOPreview.Presenters
                 await this._mediator.Publish(new ThumbnailFrameSettingsUpdated());
             }
 
-            this._configuration.OverlayLabelColor = this.View.OverlayLabelColor;
-            this._configuration.OverlayLabelFont = this.View.OverlayLabelFont;
+			this._configuration.OverlayLabelColor = this.View.OverlayLabelColor;
+			this._configuration.OverlayLabelFont = this.View.OverlayLabelFont;
+			this._configuration.OverlayLabelOutlineColor = this.View.OverlayLabelOutlineColor;
+			this._configuration.OverlayLabelOutlineSize = this.View.OverlayLabelOutlineSize;
 
             this._configuration.IconName = this.View.IconName;
 

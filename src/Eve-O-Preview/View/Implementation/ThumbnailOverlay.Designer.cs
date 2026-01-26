@@ -1,4 +1,6 @@
-﻿namespace EveOPreview.View
+﻿using EveOPreview.View.Implementation;
+
+namespace EveOPreview.View
 {
 	partial class ThumbnailOverlay
 	{
@@ -30,7 +32,7 @@
 		{
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ThumbnailOverlay));
 			OverlayAreaPictureBox = new System.Windows.Forms.PictureBox();
-			OverlayLabel = new System.Windows.Forms.Label();
+			OverlayLabel = new BorderLabel();
 			CycleGroupIndicator = new System.Windows.Forms.PictureBox();
 			((System.ComponentModel.ISupportInitialize)OverlayAreaPictureBox).BeginInit();
 			((System.ComponentModel.ISupportInitialize)CycleGroupIndicator).BeginInit();
@@ -115,7 +117,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.Label OverlayLabel;
+		private BorderLabel OverlayLabel;
 		private System.Windows.Forms.PictureBox OverlayAreaPictureBox;
 		private System.Windows.Forms.PictureBox CycleGroupIndicator;
 	}

@@ -152,8 +152,10 @@ namespace EveOPreview.Configuration.Implementation
             this.PreventPreviewColor = Color.Purple;
             this.ActiveClientHighlightThickness = 3;
 
-            this.OverlayLabelColor = Color.Orange;
-            this.OverlayLabelFont = new Font(FontFamily.GenericSansSerif, 10.0F, FontStyle.Bold);
+			this.OverlayLabelColor = Color.Orange;
+			this.OverlayLabelOutlineColor = Color.Black;
+			this.OverlayLabelOutlineSize = 1;
+			this.OverlayLabelFont = new Font(FontFamily.GenericSansSerif,10.0F, FontStyle.Bold);
 
             this.IconName = "";
 
@@ -332,9 +334,11 @@ namespace EveOPreview.Configuration.Implementation
 
         public bool EnableActiveClientHighlight { get; set; }
 
-        public Color ActiveClientHighlightColor { get; set; }
-        public Color PreventPreviewColor { get; set; }
-        public Color OverlayLabelColor { get; set; }
+		public Color ActiveClientHighlightColor { get; set; }
+		public Color PreventPreviewColor { get; set; }
+		public Color OverlayLabelColor { get; set; }
+		public Color OverlayLabelOutlineColor { get; set; }
+		public int OverlayLabelOutlineSize { get; set; }
 
         [JsonProperty]
         public Font OverlayLabelFont { get; set; }
@@ -562,12 +566,13 @@ namespace EveOPreview.Configuration.Implementation
                 ThumbnailConfiguration.ApplyRestrictions(this.ThumbnailSize.Height, this.ThumbnailMinimumSize.Height, this.ThumbnailMaximumSize.Height));
             this.ThumbnailOpacity = ThumbnailConfiguration.ApplyRestrictions((int)(this.ThumbnailOpacity * 100.00), 20, 100) / 100.00;
             this.ThumbnailZoomFactor = ThumbnailConfiguration.ApplyRestrictions(this.ThumbnailZoomFactor, 2, 10);
-            this.ActiveClientHighlightThickness = ThumbnailConfiguration.ApplyRestrictions(this.ActiveClientHighlightThickness, 1, 6);
-        }
+			this.OverlayLabelOutlineSize = ThumbnailConfiguration.ApplyRestrictions(this.OverlayLabelOutlineSize, 0, 10);
+			this.ActiveClientHighlightThickness = ThumbnailConfiguration.ApplyRestrictions(this.ActiveClientHighlightThickness, 1, 6);
+		}
 
-        // Converts the legacy fixed CycleGroup1..5 properties into the dynamic CycleGroups list
-        // the first time an old config (ConfigVersion < 2) is loaded.
-        private void MigrateCycleGroupsIfNeeded()
+		// Converts the legacy fixed CycleGroup1..5 properties into the dynamic CycleGroups list
+		// the first time an old config (ConfigVersion < 2) is loaded.
+		private void MigrateCycleGroupsIfNeeded()
         {
             if (this.CycleGroups == null)
             {
@@ -608,7 +613,13 @@ namespace EveOPreview.Configuration.Implementation
                 : source.Where(hotkey => !string.IsNullOrWhiteSpace(hotkey)).ToList();
         }
 
-        private static int ApplyRestrictions(int value, int minimum, int maximum)
+		public IList<string> GetAllKnownClients()
+		{
+			// Prefer FlatLayout keys as the source of known clients
+			return this.FlatLayout?.Keys?.ToList() ?? new List<string>();
+		}
+
+		private static int ApplyRestrictions(int value, int minimum, int maximum)
         {
             if (value <= minimum)
             {

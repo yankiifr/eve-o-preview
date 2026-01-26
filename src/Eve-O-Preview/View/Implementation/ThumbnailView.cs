@@ -106,7 +106,7 @@ namespace EveOPreview.View
 				}
 
 				this._overlay.SetOverlayLabel(value.Replace("EVE - ", "").Replace("EVE Frontier - ", "*"));
-				this._overlay.SetPropertiesOverlayLabel(_config.OverlayLabelFont, _config.OverlayLabelColor, _config.OverlayLabelAnchor);
+				this._overlay.SetPropertiesOverlayLabel(_config.OverlayLabelFont, _config.OverlayLabelColor, _config.OverlayLabelOutlineColor, _config.OverlayLabelOutlineSize, _config.OverlayLabelAnchor);
 				SetDefaultBorderColor();
 				SetPreventPreviews();
 				this._overlay.EnableFakePreview(this._preventPreviews.Value, false, 0, SystemColors.Control);
@@ -505,7 +505,7 @@ namespace EveOPreview.View
 			this._isLocationChanged = false;
 			this._overlay.Size = overlaySize;
 
-			this._overlay.SetPropertiesOverlayLabel(_config.OverlayLabelFont, _config.OverlayLabelColor, _config.OverlayLabelAnchor);
+			this._overlay.SetPropertiesOverlayLabel(_config.OverlayLabelFont, _config.OverlayLabelColor, _config.OverlayLabelOutlineColor, _config.OverlayLabelOutlineSize, _config.OverlayLabelAnchor);
 
 			this._overlay.Location = overlayLocation;
 			this._overlay.Refresh();
