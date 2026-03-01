@@ -326,31 +326,36 @@ namespace EveOPreview.View
             set => this.ShowThumbnailOverlaysCheckBox.Checked = value;
         }
 
-        public bool ShowThumbnailFrames
-        {
-            get => this.ShowThumbnailFramesCheckBox.Checked;
-            set => this.ShowThumbnailFramesCheckBox.Checked = value;
-        }
-        public bool LockThumbnailLocation
-        {
-            get => this.LockThumbnailLocationCheckbox.Checked;
-            set => this.LockThumbnailLocationCheckbox.Checked = value;
-        }
-        public bool ThumbnailSnapToGrid
-        {
-            get => this.ThumbnailSnapToGridCheckBox.Checked;
-            set => this.ThumbnailSnapToGridCheckBox.Checked = value;
-        }
-        public int ThumbnailSnapToGridSizeX
-        {
-            get => (int)ThumbnailSnapToGridSizeXNumericEdit.Value;
-            set => ThumbnailSnapToGridSizeXNumericEdit.Value = value;
-        }
-        public int ThumbnailSnapToGridSizeY
-        {
-            get => (int)ThumbnailSnapToGridSizeYNumericEdit.Value;
-            set => ThumbnailSnapToGridSizeYNumericEdit.Value = value;
-        }
+		public bool ShowThumbnailFrames
+		{
+			get => this.ShowThumbnailFramesCheckBox.Checked;
+			set => this.ShowThumbnailFramesCheckBox.Checked = value;
+		}
+		public bool LockThumbnailLocation
+		{
+			get => this.LockThumbnailLocationCheckbox.Checked;
+			set => this.LockThumbnailLocationCheckbox.Checked = value;
+		}
+		public bool ThumbnailSnapToGrid
+		{
+			get => this.ThumbnailSnapToGridCheckBox.Checked;
+			set => this.ThumbnailSnapToGridCheckBox.Checked = value;
+		}
+		public bool CoreAffinity
+		{
+			get => this.CoreAffinityCheckBox.Checked;
+			set => this.CoreAffinityCheckBox.Checked = value;
+		}
+		public int ThumbnailSnapToGridSizeX
+		{
+			get => (int)ThumbnailSnapToGridSizeXNumericEdit.Value;
+			set => ThumbnailSnapToGridSizeXNumericEdit.Value = value;
+		}
+		public int ThumbnailSnapToGridSizeY
+		{
+			get => (int)ThumbnailSnapToGridSizeYNumericEdit.Value;
+			set => ThumbnailSnapToGridSizeYNumericEdit.Value = value;
+		}
 
         public bool EnableActiveClientHighlight
         {

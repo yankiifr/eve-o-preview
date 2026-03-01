@@ -15,6 +15,7 @@
     "MainForm.ContentTabControl.ThumbnailTabPage.DoNotDisplayPreviewColour": "Color",
     "MainForm.ContentTabControl.ThumbnailTabPage.PreventPreviewsCheckBox": "Do not display previews",
     "MainForm.ContentTabControl.ThumbnailTabPage.ThumbnailSnapToGridCheckBox": "Thumbnail Snap to Grid",
+    "MainForm.ContentTabControl.ThumbnailTabPage.CoreAffinityCheckBox": "Force Core Affinity",
     "MainForm.ContentTabControl.ThumbnailTabPage.SnapYLabel": "Y",
     "MainForm.ContentTabControl.ThumbnailTabPage.SnapXLabel": "Snap X",
     "MainForm.ContentTabControl.ThumbnailTabPage.LockThumbnailLocationCheckbox": "Lock Thumbnail Location",

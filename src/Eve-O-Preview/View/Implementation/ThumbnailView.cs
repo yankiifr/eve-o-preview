@@ -46,6 +46,7 @@ namespace EveOPreview.View
 		private Lazy<Color> _myBorderColor;
 		private Lazy<Color> _preventPreviewColor;
 		private Lazy<bool> _preventPreviews;
+		private Lazy<string> _coreAffinity;
 		private IThumbnailManager _thumbnailManager;
 		#endregion
 
@@ -196,7 +197,6 @@ namespace EveOPreview.View
 				}
 			});
 		}
-
 		public new void Show()
 		{
 			this.SuppressResizeEvent();

@@ -25,7 +25,7 @@ namespace EveOPreview.Services.Implementation
 
 			// This field cannot be initialized properly in constructor
 			// At the moment this code is executed the main application window is not yet initialized
-			this._currentProcessInfo = new ProcessInfo(IntPtr.Zero, "");
+			this._currentProcessInfo = new ProcessInfo(IntPtr.Zero, "", 0);
 		}
 
 		private bool IsMonitoredProcess(string processName)
@@ -37,7 +37,7 @@ namespace EveOPreview.Services.Implementation
 		private IProcessInfo GetCurrentProcessInfo()
 		{
 			var currentProcess = Process.GetCurrentProcess();
-			return new ProcessInfo(currentProcess.MainWindowHandle, currentProcess.MainWindowTitle);
+			return new ProcessInfo(currentProcess.MainWindowHandle, currentProcess.MainWindowTitle, currentProcess.Id);
 		}
 
 		public IProcessInfo GetMainProcess()
@@ -63,7 +63,7 @@ namespace EveOPreview.Services.Implementation
 			// TODO Lock list here just in case
 			foreach (KeyValuePair<IntPtr, string> entry in this._processCache)
 			{
-				result.Add(new ProcessInfo(entry.Key, entry.Value));
+				result.Add(new ProcessInfo(entry.Key, entry.Value, 0));
 			}
 
 			return result;
@@ -91,6 +91,8 @@ namespace EveOPreview.Services.Implementation
 					continue; // No need to monitor non-visual processes
 				}
 
+				int Id = process.Id;
+
 				string mainWindowTitle = process.MainWindowTitle.Replace("—", "-");
 				this._processCache.TryGetValue(mainWindowHandle, out string cachedTitle);
 
@@ -98,7 +100,7 @@ namespace EveOPreview.Services.Implementation
 				{
 					// This is a new process in the list
 					this._processCache.Add(mainWindowHandle, mainWindowTitle);
-					addedProcesses.Add(new ProcessInfo(mainWindowHandle, mainWindowTitle));
+					addedProcesses.Add(new ProcessInfo(mainWindowHandle, mainWindowTitle, Id));
 				}
 				else
 				{
@@ -106,7 +108,7 @@ namespace EveOPreview.Services.Implementation
 					if (cachedTitle != mainWindowTitle)
 					{
 						this._processCache[mainWindowHandle] = mainWindowTitle;
-						updatedProcesses.Add(new ProcessInfo(mainWindowHandle, mainWindowTitle));
+						updatedProcesses.Add(new ProcessInfo(mainWindowHandle, mainWindowTitle, Id));
 					}
 
 					knownProcesses.Remove(mainWindowHandle);
@@ -116,7 +118,7 @@ namespace EveOPreview.Services.Implementation
 			foreach (IntPtr index in knownProcesses)
 			{
 				string title = this._processCache[index];
-				removedProcesses.Add(new ProcessInfo(index, title));
+				removedProcesses.Add(new ProcessInfo(index, title, 0));
 				this._processCache.Remove(index);
 			}
 		}

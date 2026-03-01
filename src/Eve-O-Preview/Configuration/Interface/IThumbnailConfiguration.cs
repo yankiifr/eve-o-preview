@@ -15,6 +15,7 @@ namespace EveOPreview.Configuration
 
 		Dictionary<string, Color> PerClientActiveClientHighlightColor { get; set; }
 		Dictionary<string, Color> PerClientPreventPreviewColor { get; set; }
+		Dictionary<string, string> PerClientCoreAffinity { get; set; }
 		Dictionary<string, string> PerClientAliases { get; set; }
 		Dictionary<string, bool> PerClientPreventPreviews { get; set; }
 		Dictionary<string, Size> PerClientThumbnailSize { get; set; }
@@ -39,9 +40,10 @@ namespace EveOPreview.Configuration
 		bool ShowThumbnailsAlwaysOnTop { get; set; }
 		bool EnablePerClientThumbnailLayouts { get; set; }
 
-        bool PreventPreviews { get; set; }
-        bool HideThumbnailsOnLostFocus { get; set; }
-        int HideThumbnailsDelay { get; set; }
+		bool PreventPreviews { get; set; }
+		string DefaultCoreAffinity { get; set; }
+		bool HideThumbnailsOnLostFocus { get; set; }
+		int HideThumbnailsDelay { get; set; }
 
         Size ThumbnailSize { get; set; }
         Size ThumbnailMinimumSize { get; set; }
@@ -55,12 +57,13 @@ namespace EveOPreview.Configuration
         ZoomAnchor OverlayLabelAnchor { get; set; }
         ZoomAnchor CycleGroupIndicatorAnchor { get; set; }
 
-        bool ShowThumbnailOverlays { get; set; }
-        bool ShowThumbnailFrames { get; set; }
-        bool LockThumbnailLocation { get; set; }
-        bool ThumbnailSnapToGrid { get; set; }
-        int ThumbnailSnapToGridSizeX { get; set; }
-        int ThumbnailSnapToGridSizeY { get; set; }
+		bool ShowThumbnailOverlays { get; set; }
+		bool ShowThumbnailFrames { get; set; }
+		bool LockThumbnailLocation { get; set; }
+		bool ThumbnailSnapToGrid { get; set; }
+		bool CoreAffinity { get; set; }
+		int ThumbnailSnapToGridSizeX { get; set; }
+		int ThumbnailSnapToGridSizeY { get; set; }
 
 		bool EnableActiveClientHighlight { get; set; }
 		Color ActiveClientHighlightColor { get; set; }

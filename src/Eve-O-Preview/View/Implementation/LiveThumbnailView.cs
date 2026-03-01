@@ -32,6 +32,11 @@ namespace EveOPreview.View
 				this.RegisterThumbnail();
 				obsoleteThumbnail?.Unregister();
 			}
+
+			if ( this._config.CoreAffinity )
+			{
+
+			}
 		}
 
 		protected override void ResizeThumbnail(int baseWidth, int baseHeight, int highlightWidthTop, int highlightWidthRight, int highlightWidthBottom, int highlightWidthLeft)
