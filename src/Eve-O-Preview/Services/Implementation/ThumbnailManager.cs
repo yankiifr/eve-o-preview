@@ -1102,7 +1102,7 @@ namespace EveOPreview.Services
 
 				if (i < ProcessorCount)
 				{
-					affinityBits += bit;
+					affinityBits = bit + affinityBits;
 				}
 			}
 			IntPtr affinity = new IntPtr(Convert.ToInt64(affinityBits.ToString(), 2));
