@@ -16,7 +16,7 @@ The program does NOT (and will NOT ever) do the following things:
 * modify EVE Online interface
 * display modified EVE Online interface
 * broadcast any keyboard or mouse events
-* anyhow interact with EVE Online except of bringing its main window to foreground or resizing/minimizing it
+* anyhow interact with EVE Online except of bringing its main window to foreground or resizing/minimizing it, and setting cpu core affinity if configured to do so.
 
 <div style="page-break-after: always;"></div>
 
@@ -85,7 +85,7 @@ CCP Grimmi wrote:
 | Previews always on top | Determines whether EVE client thumbnails should stay on top of all other windows |
 | Hide previews when EVE client is not active | Determines whether all thumbnails should be visible only when an EVE client is active |
 | Unique layout for each EVE client | Determines whether thumbnails positions are different depending on the EVE client being active |
-
+| Enforce Core Affinity | Request EVEOnline clients to have CPU core affinity as per configuration. Configuration exists for per client affinity and a default value.
 #### **Thumbnail** Tab
 | Option | Description |
 | --- | --- |
@@ -257,17 +257,17 @@ Should you wish to remove these HotKeys completely, Simply set the values to emp
 
 In a similar pattern to the per client Hotkey Setup, It is possible to set a key combinations to Minimize all the Eve Windows. EVE-O Preview doesn't provide any GUI to set the these hotkeys. It should be done via editing the configuration file directly. Don't forget to make a backup copy of the file before editing it.
 
-  "MinimizeAllClientsHotkeys": [
-    "F22"
-  ],
+    "MinimizeAllClientsHotkeys": [
+      "F22"
+    ],
 
 ### Refresh all minimized clients with Hotkey Setup
 
 In a similar pattern to the per client Hotkey Setup, It is possible to set a key combinations to refresh all the minimized Eve Windows. EVE-O Preview doesn't provide any GUI to set the these hotkeys. It should be done via editing the configuration file directly. Don't forget to make a backup copy of the file before editing it.
 
-  "RefreshMinimizedClientsHotkeys": [
-    "Control+F21"
-  ],
+    "RefreshMinimizedClientsHotkeys": [
+      "Control+F21"
+    ],
 
 **Hints** 
 * Minimise the use of modifiers or standard keys to minimise issues with the client playing up. In the default example unusual Function keys (e.g. F14) are used which are then bound to a game pad or gaming mouse.
@@ -339,10 +339,10 @@ EVE-O Preview doesn't provide any GUI to set the these per client overrides as y
 
 Open the file using any text editor. find the entry **PerClientZoomAnchor**. Most probably it will look like
 
-  "PerClientPreventPreviews": {
-      "EVE - Example Toon 1": false,
-      "EVE - Example Toon 2": true
-    }
+    "PerClientPreventPreviews": {
+        "EVE - Example Toon 1": false,
+        "EVE - Example Toon 2": true
+      }
 
 You should modify this entry with a list of each of your clients replacing "Example Toon 1", etc with the name of your character. The values on the right allow you to enforce always showing preview (if not minimized) or never showing preview.
 
@@ -356,7 +356,7 @@ EVE-O Preview doesn't provide any GUI to set the these per client overrides as y
 
 Open the file using any text editor. find the entry **PerClientPreventPreviewColor**. Most probably it will look like
 
-"PerClientPreventPreviewColor": {
+    "PerClientPreventPreviewColor": {
       "EVE - Example Toon 1": "Red",
       "EVE - Example Toon 2": "Blue"
     }
@@ -373,7 +373,7 @@ EVE-O Preview doesn't provide any GUI to set the these per client overrides as y
 
 Open the file using any text editor. find the entry **PerClientAliases**. Most probably it will look like
 
-"PerClientAliases": {
+    "PerClientAliases": {
       "EVE - Example Toon 1": "Main",
       "EVE - Example Toon 2": "Alt"
     }
@@ -381,6 +381,28 @@ Open the file using any text editor. find the entry **PerClientAliases**. Most p
 You should modify this entry with a list of each of your clients replacing "Example Toon 1", etc with the name of your character. The values on the right allow you to set a label for the preview overlay. 
 
 If a client does not appear in this list, then it will use the actual toon name.
+
+### Per Client Core Affinity
+Would you like to have specific clients set CPU core affinity to individual cores ?
+
+EVE-O Preview doesn't provide any GUI to set the these per client overrides as yet. Though, It can be done via editing the configuration file directly. 
+**Note** Don't forget to make a backup copy of the file before editing it.
+
+Open the file using any text editor. find the entry **PerClientZoomAnchor**. Most probably it will look like
+
+    "PerClientCoreAffinity": {
+        "EVE": "1111",
+        "EVE - Example Toon 1": "1000",
+        "EVE - Example Toon 2": "0100"
+      }
+
+You should modify this entry with a list of each of your clients replacing "Example Toon 1", etc with the name of your character. The values on the right allow you to set CPU Core affinity. You will need to find how many cores you have (look in Windows Task Manager, Performance Tab). Set string to have 1 in each position you wish core allocated. For example "1100" allocates cores 0 and 1.
+
+If a client does not appear in this list, then it will use the global Core Affinty by default.
+
+    "DefaultCoreAffinity": "1111",
+
+
 
 ### Compatibility Mode
 
