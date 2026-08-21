@@ -239,7 +239,7 @@ namespace EveOPreview.View
 			ContentTabControl.Multiline = true;
 			ContentTabControl.Name = "ContentTabControl";
 			ContentTabControl.SelectedIndex = 0;
-			ContentTabControl.Size = new Size(913, 486);
+			ContentTabControl.Size = new Size(913, 487);
 			ContentTabControl.SizeMode = TabSizeMode.Fixed;
 			ContentTabControl.TabIndex = 6;
 			ContentTabControl.DrawItem += ContentTabControl_DrawItem;
@@ -252,7 +252,7 @@ namespace EveOPreview.View
 			GeneralTabPage.Margin = new Padding(6, 7, 6, 7);
 			GeneralTabPage.Name = "GeneralTabPage";
 			GeneralTabPage.Padding = new Padding(6, 7, 6, 7);
-			GeneralTabPage.Size = new Size(785, 478);
+			GeneralTabPage.Size = new Size(785, 479);
 			GeneralTabPage.TabIndex = 0;
 			GeneralTabPage.Text = "General";
 			// 
@@ -275,7 +275,7 @@ namespace EveOPreview.View
 			GeneralSettingsPanel.Location = new Point(6, 7);
 			GeneralSettingsPanel.Margin = new Padding(6, 7, 6, 7);
 			GeneralSettingsPanel.Name = "GeneralSettingsPanel";
-			GeneralSettingsPanel.Size = new Size(773, 464);
+			GeneralSettingsPanel.Size = new Size(773, 465);
 			GeneralSettingsPanel.TabIndex = 18;
 			GeneralSettingsPanel.Paint += GeneralSettingsPanel_Paint;
 			// 
@@ -284,7 +284,7 @@ namespace EveOPreview.View
 			CoreAffinityCheckBox.AutoSize = true;
 			CoreAffinityCheckBox.Checked = true;
 			CoreAffinityCheckBox.CheckState = CheckState.Checked;
-			CoreAffinityCheckBox.Location = new Point(19, 570);
+			CoreAffinityCheckBox.Location = new Point(13, 341);
 			CoreAffinityCheckBox.Margin = new Padding(9, 12, 9, 12);
 			CoreAffinityCheckBox.Name = "CoreAffinityCheckBox";
 			CoreAffinityCheckBox.Size = new Size(201, 29);
@@ -436,7 +436,7 @@ namespace EveOPreview.View
 			ThumbnailTabPage.Margin = new Padding(6, 7, 6, 7);
 			ThumbnailTabPage.Name = "ThumbnailTabPage";
 			ThumbnailTabPage.Padding = new Padding(6, 7, 6, 7);
-			ThumbnailTabPage.Size = new Size(701, 478);
+			ThumbnailTabPage.Size = new Size(785, 478);
 			ThumbnailTabPage.TabIndex = 1;
 			ThumbnailTabPage.Text = "Thumbnail";
 			// 
@@ -462,7 +462,7 @@ namespace EveOPreview.View
 			ThumbnailSettingsPanel.Location = new Point(6, 7);
 			ThumbnailSettingsPanel.Margin = new Padding(6, 7, 6, 7);
 			ThumbnailSettingsPanel.Name = "ThumbnailSettingsPanel";
-			ThumbnailSettingsPanel.Size = new Size(689, 464);
+			ThumbnailSettingsPanel.Size = new Size(773, 464);
 			ThumbnailSettingsPanel.TabIndex = 19;
 			// 
 			// DoNotDisplayPreviewColour
@@ -653,7 +653,7 @@ namespace EveOPreview.View
 			ZoomTabPage.Location = new Point(124, 4);
 			ZoomTabPage.Margin = new Padding(6, 7, 6, 7);
 			ZoomTabPage.Name = "ZoomTabPage";
-			ZoomTabPage.Size = new Size(701, 478);
+			ZoomTabPage.Size = new Size(785, 478);
 			ZoomTabPage.TabIndex = 2;
 			ZoomTabPage.Text = "Zoom";
 			// 
@@ -669,7 +669,7 @@ namespace EveOPreview.View
 			ZoomSettingsPanel.Location = new Point(0, 0);
 			ZoomSettingsPanel.Margin = new Padding(6, 7, 6, 7);
 			ZoomSettingsPanel.Name = "ZoomSettingsPanel";
-			ZoomSettingsPanel.Size = new Size(701, 478);
+			ZoomSettingsPanel.Size = new Size(785, 478);
 			ZoomSettingsPanel.TabIndex = 36;
 			// 
 			// ZoomFactorLabel
@@ -854,7 +854,7 @@ namespace EveOPreview.View
 			OverlayTabPage.Location = new Point(124, 4);
 			OverlayTabPage.Margin = new Padding(6, 7, 6, 7);
 			OverlayTabPage.Name = "OverlayTabPage";
-			OverlayTabPage.Size = new Size(701, 478);
+			OverlayTabPage.Size = new Size(785, 478);
 			OverlayTabPage.TabIndex = 3;
 			OverlayTabPage.Text = "Overlay";
 			// 
@@ -882,7 +882,7 @@ namespace EveOPreview.View
 			OverlaySettingsPanel.Location = new Point(0, 0);
 			OverlaySettingsPanel.Margin = new Padding(6, 7, 6, 7);
 			OverlaySettingsPanel.Name = "OverlaySettingsPanel";
-			OverlaySettingsPanel.Size = new Size(701, 478);
+			OverlaySettingsPanel.Size = new Size(785, 478);
 			OverlaySettingsPanel.TabIndex = 25;
 			// 
 			// label1
@@ -1313,7 +1313,7 @@ namespace EveOPreview.View
 			ClientsTabPage.Location = new Point(124, 4);
 			ClientsTabPage.Margin = new Padding(6, 7, 6, 7);
 			ClientsTabPage.Name = "ClientsTabPage";
-			ClientsTabPage.Size = new Size(701, 478);
+			ClientsTabPage.Size = new Size(785, 478);
 			ClientsTabPage.TabIndex = 4;
 			ClientsTabPage.Text = "Active Clients";
 			// 
@@ -1326,7 +1326,7 @@ namespace EveOPreview.View
 			ClientsPanel.Location = new Point(0, 0);
 			ClientsPanel.Margin = new Padding(6, 7, 6, 7);
 			ClientsPanel.Name = "ClientsPanel";
-			ClientsPanel.Size = new Size(701, 478);
+			ClientsPanel.Size = new Size(785, 478);
 			ClientsPanel.TabIndex = 32;
 			// 
 			// ThumbnailsList
@@ -1340,7 +1340,7 @@ namespace EveOPreview.View
 			ThumbnailsList.Location = new Point(0, 132);
 			ThumbnailsList.Margin = new Padding(6, 7, 6, 7);
 			ThumbnailsList.Name = "ThumbnailsList";
-			ThumbnailsList.Size = new Size(699, 344);
+			ThumbnailsList.Size = new Size(783, 344);
 			ThumbnailsList.TabIndex = 34;
 			ThumbnailsList.ItemCheck += ThumbnailsList_ItemCheck_Handler;
 			// 
@@ -1362,7 +1362,7 @@ namespace EveOPreview.View
 			LanguageTabPage.Margin = new Padding(4, 5, 4, 5);
 			LanguageTabPage.Name = "LanguageTabPage";
 			LanguageTabPage.Padding = new Padding(4, 5, 4, 5);
-			LanguageTabPage.Size = new Size(701, 478);
+			LanguageTabPage.Size = new Size(785, 478);
 			LanguageTabPage.TabIndex = 6;
 			LanguageTabPage.Text = "Language";
 			LanguageTabPage.UseVisualStyleBackColor = true;
@@ -1396,7 +1396,7 @@ namespace EveOPreview.View
 			AboutTabPage.Location = new Point(124, 4);
 			AboutTabPage.Margin = new Padding(6, 7, 6, 7);
 			AboutTabPage.Name = "AboutTabPage";
-			AboutTabPage.Size = new Size(701, 478);
+			AboutTabPage.Size = new Size(785, 478);
 			AboutTabPage.TabIndex = 5;
 			AboutTabPage.Text = "About";
 			// 
@@ -1414,7 +1414,7 @@ namespace EveOPreview.View
 			AboutPanel.Location = new Point(0, 0);
 			AboutPanel.Margin = new Padding(6, 7, 6, 7);
 			AboutPanel.Name = "AboutPanel";
-			AboutPanel.Size = new Size(701, 478);
+			AboutPanel.Size = new Size(785, 478);
 			AboutPanel.TabIndex = 2;
 			// 
 			// CreditMaintLabel
@@ -1504,7 +1504,7 @@ namespace EveOPreview.View
 			AutoScaleDimensions = new SizeF(10F, 25F);
 			AutoScaleMode = AutoScaleMode.Font;
 			BackColor = SystemColors.Control;
-			ClientSize = new Size(913, 486);
+			ClientSize = new Size(913, 487);
 			Controls.Add(ContentTabControl);
 			FormBorderStyle = FormBorderStyle.FixedSingle;
 			Icon = (Icon)resources.GetObject("$this.Icon");
