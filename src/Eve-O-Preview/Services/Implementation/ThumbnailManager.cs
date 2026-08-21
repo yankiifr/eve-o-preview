@@ -410,18 +410,29 @@ namespace EveOPreview.Services
             // Tear down existing cycle / minimize-all hotkeys.
             foreach (HotkeyHandler handler in this._cycleClientHotkeyHandlers)
             {
-                handler.Dispose();
+                try
+                {
+                    handler.Unregister();
+                    handler.Dispose();
+                } catch { }
             }
             this._cycleClientHotkeyHandlers.Clear();
 
             // Re-register cycle / minimize-all hotkeys.
             this.RegisterConfiguredCycleHotkeys();
 
-            // Re-apply per-client hotkeys to existing thumbnails.
-            foreach (IThumbnailView view in this._thumbnailViews.Values)
+			RegisterMinimizeAllClientsHotkey(this._configuration.MinimizeAllClientsHotkeys?.Select(x => this._configuration.StringToKey(x)));
+			RegisterRefreshMinimizedClientsHotkey(this._configuration.RefreshMinimizedClientsHotkeys?.Select(x => this._configuration.StringToKey(x)));
+
+			// Re-apply per-client hotkeys to existing thumbnails.
+			foreach (IThumbnailView view in this._thumbnailViews.Values)
             {
-                view.UnregisterHotkey();
-                view.RegisterHotkey(this._configuration.GetClientHotkey(view.Title));
+                try
+                {
+                    view.UnregisterHotkey();
+				}
+				catch { }
+				view.RegisterHotkey(this._configuration.GetClientHotkey(view.Title));
             }
         }
 
