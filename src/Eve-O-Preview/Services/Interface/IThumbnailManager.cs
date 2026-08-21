@@ -10,8 +10,11 @@ namespace EveOPreview.Services
         void UpdateCycleGroupIndicator();
         void UpdateThumbnailsSize();
         void UpdateThumbnailFrames();
+		void ApplyAllClientLayouts();
+		void ApplyAllCoreAffinities();
+		void UpdateClientLayouts();
 
-        void RefreshHotkeys();
+		void RefreshHotkeys();
 
         IThumbnailView GetClientByTitle(string title);
         IThumbnailView GetClientByPointer(System.IntPtr ptr);

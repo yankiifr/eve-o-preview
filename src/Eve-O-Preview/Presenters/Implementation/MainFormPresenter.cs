@@ -134,6 +134,7 @@ namespace EveOPreview.Presenters
         {
             this._configurationStorage.Load();
 
+
 			if (!string.IsNullOrEmpty(this._configuration.Language) && this._configuration.Language != "en-US")
 			{
 				LocalizationExtensions.SetLanguage(this._configuration.Language);
@@ -498,18 +499,20 @@ namespace EveOPreview.Presenters
                 return;
             }
 
-            ProfileSwitchChoice choice = this.View.PromptSaveBeforeSwitch(this._configurationStorage.ActiveProfileName);
-            if (choice == ProfileSwitchChoice.Cancel)
+            if (this._configurationStorage.IsDirty())
             {
-                this.RefreshProfilesView(); // revert the list selection
-                return;
-            }
+                ProfileSwitchChoice choice = this.View.PromptSaveBeforeSwitch(this._configurationStorage.ActiveProfileName);
+                if (choice == ProfileSwitchChoice.Cancel)
+                {
+                    this.RefreshProfilesView(); // revert the list selection
+                    return;
+                }
 
-            if (choice == ProfileSwitchChoice.Save)
-            {
-                this._configurationStorage.Save();
+                if (choice == ProfileSwitchChoice.Save)
+                {
+                    this._configurationStorage.Save();
+                }
             }
-
             if (!this._configurationStorage.SwitchProfile(name))
             {
                 this.View.ShowMessage("Could not switch to profile \"" + name + "\".");
@@ -617,14 +620,14 @@ namespace EveOPreview.Presenters
         {
             this.LoadApplicationSettings();
             this.View.RefreshZoomSettings();
-
-            await this._mediator.Publish(new ThumbnailFrameSettingsUpdated());
-            await this._mediator.Publish(new ThumbnailConfiguredSizeUpdated());
+			await this._mediator.Publish(new ThumbnailConfiguredSizeUpdated());
+			await this._mediator.Publish(new ThumbnailFrameSettingsUpdated());
             await this._mediator.Publish(new ThumbnailCycleGroupIndicatorUpdated());
-            await this._mediator.Send(new RefreshHotkeys());
-        }
+			await this._mediator.Publish(new ThumbnailApplyAllClientsLayouts());
+			await this._mediator.Send(new RefreshHotkeys());
+		}
 
-        private async void UpdateThumbnailState(String title)
+		private async void UpdateThumbnailState(String title)
         {
             if (this._descriptionsCache.TryGetValue(title, out IThumbnailDescription description))
             {

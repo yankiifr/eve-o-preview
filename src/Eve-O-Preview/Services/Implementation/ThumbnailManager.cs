@@ -469,7 +469,7 @@ namespace EveOPreview.Services
                     initialSize = this._configuration.PerClientThumbnailSize[process.Title];
                 }
 
-                IThumbnailView view = this._thumbnailViewFactory.Create(process.Handle, process.Title, this._configuration.ThumbnailSize);
+                IThumbnailView view = this._thumbnailViewFactory.Create(process.Handle, process.Title, this._configuration.ThumbnailSize, process.Id);
                 view.IsOverlayEnabled = this._configuration.ShowThumbnailOverlays;
                 view.IsExcludedFromCycleGroup = false;
                 view.SetFrames(this._configuration.ShowThumbnailFrames);
@@ -497,7 +497,7 @@ namespace EveOPreview.Services
 
 				this.ApplyClientLayout(view);
 				this.ApplyCaptionBar(view);
-				this.ApplyCoreAffinity(view, process);
+				this.ApplyCoreAffinity(view);
 
                 // TODO Add extension filter here later
                 if (view.Title != ThumbnailManager.DEFAULT_CLIENT_TITLE)
@@ -526,7 +526,7 @@ namespace EveOPreview.Services
 
 					this.ApplyClientLayout(view);
 					this.ApplyCaptionBar(view);
-					this.ApplyCoreAffinity(view, process);
+					this.ApplyCoreAffinity(view);
 				}
 			}
 
@@ -1083,7 +1083,7 @@ namespace EveOPreview.Services
 			changed = changed | SetWindowStyle(view, InteropConstants.WS_CAPTION, enable);
 			changed = changed | SetWindowStyle(view, InteropConstants.WS_THICKFRAME, enable);
 		}
-		private void ApplyCoreAffinity(IThumbnailView view, IProcessInfo proc)
+		private void ApplyCoreAffinity(IThumbnailView view)
 		{
 			IntPtr clientHandle = view.Id;
 			string clientTitle = view.Title;
@@ -1103,10 +1103,11 @@ namespace EveOPreview.Services
 			for (int i = 0; i < ProcessorCount; i++)
 			{
 				var bit = '1';
-				if ( i > coreAffinity.Length-1)
+				if (i > coreAffinity.Length - 1)
 				{
 					bit = '0';
-				} else
+				}
+				else
 				{
 					bit = coreAffinity.Substring(i, 1)[0];
 				}
@@ -1117,7 +1118,7 @@ namespace EveOPreview.Services
 				}
 			}
 			IntPtr affinity = new IntPtr(Convert.ToInt64(affinityBits.ToString(), 2));
-			var actualProcess = System.Diagnostics.Process.GetProcessById((int)proc.Id);
+			var actualProcess = System.Diagnostics.Process.GetProcessById(view.ProcessId);
 			if (actualProcess.ProcessorAffinity != affinity)
 			{
 				actualProcess.ProcessorAffinity = affinity;
@@ -1159,7 +1160,15 @@ namespace EveOPreview.Services
 
 			view.Title = clientTitle;
 		}
+		public void ApplyAllCoreAffinities()
+		{
+			var activeClient = this.GetActiveClient();
 
+			foreach (KeyValuePair<IntPtr, IThumbnailView> entry in this._thumbnailViews)
+			{
+				this.ApplyCoreAffinity(entry.Value);
+			}
+		}
 		public void ApplyAllClientLayouts()
 		{
 			this.DisableViewEvents();
@@ -1188,7 +1197,7 @@ namespace EveOPreview.Services
 			this.Start();
 		}
 
-        private void UpdateClientLayouts()
+        public void UpdateClientLayouts()
         {
             if (!this._configuration.EnableClientLayoutTracking)
             {

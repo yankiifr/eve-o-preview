@@ -15,7 +15,7 @@ namespace EveOPreview.View
 			this._enableWineCompatibilityMode = configuration.EnableWineCompatibilityMode;
 		}
 
-		public IThumbnailView Create(IntPtr id, string title, Size size)
+		public IThumbnailView Create(IntPtr id, string title, Size size, int processId)
 		{
 			IThumbnailView view = this._enableWineCompatibilityMode
 				? (IThumbnailView)this._controller.Create<StaticThumbnailView>()
@@ -24,7 +24,7 @@ namespace EveOPreview.View
 			view.Id = id;
 			view.Title = title;
 			view.ThumbnailSize = size;
-
+			view.ProcessId = processId;
 			return view;
 		}
 	}

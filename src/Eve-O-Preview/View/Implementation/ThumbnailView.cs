@@ -93,6 +93,7 @@ namespace EveOPreview.View
 		public IWindowManager WindowManager { get; }
 
 		public IntPtr Id { get; set; }
+		public int ProcessId { get; set; }
 
 		public string Title
 		{

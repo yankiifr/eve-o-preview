@@ -22,5 +22,6 @@ namespace EveOPreview.Configuration
         void ResetActiveProfileToDefaults();
         bool ExportProfile(string destinationPath);
         string ImportProfile(string sourcePath);
+        bool IsDirty();
     }
 }

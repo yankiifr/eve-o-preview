@@ -44,6 +44,7 @@ namespace EveOPreview.Configuration.Implementation
         public event Action ConfigurationReloaded;
 
         public string ActiveProfileName => this._activeProfileName;
+        private string _currentConfiguration = "";
 
         public void Load()
         {
@@ -77,9 +78,17 @@ namespace EveOPreview.Configuration.Implementation
             this.StartWatching(activePath);
         }
 
-        public void Save()
+        public bool IsDirty()
+		{
+			string rawData = JsonConvert.SerializeObject(this._thumbnailConfiguration, Formatting.Indented);
+			return !string.Equals(rawData, _currentConfiguration, StringComparison.Ordinal);
+		}
+
+		public void Save()
         {
             string rawData = JsonConvert.SerializeObject(this._thumbnailConfiguration, Formatting.Indented);
+            _currentConfiguration = rawData;
+
             string filename = this.GetProfilePath(this._activeProfileName);
 
             lock (_ioSyncRoot)
@@ -104,6 +113,8 @@ namespace EveOPreview.Configuration.Implementation
             {
                 ObjectCreationHandling = ObjectCreationHandling.Replace
             };
+
+            _currentConfiguration = rawData; // store current configuration for dirty processing
 
             JsonConvert.PopulateObject(rawData, this._thumbnailConfiguration, jsonSerializerSettings);
 
