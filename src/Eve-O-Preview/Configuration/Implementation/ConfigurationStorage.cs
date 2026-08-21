@@ -16,7 +16,7 @@ namespace EveOPreview.Configuration.Implementation
         private const string PROFILES_FOLDER_NAME = "Profiles";
         private const string PROFILE_FILE_EXTENSION = ".json";
         private const string DEFAULT_PROFILE_NAME = "Default";
-        private const string ACTIVE_PROFILE_POINTER_NAME = "active-profile.txt";
+        private const string ACTIVE_PROFILE_POINTER_NAME = "EVE-O-Preview.active-profile";
         private const string LEGACY_CONFIG_FILE_NAME = "EVE-O-Preview.json";
         private const int DEBOUNCE_MS = 400;
 
@@ -386,10 +386,16 @@ namespace EveOPreview.Configuration.Implementation
         {
             // SpecialFolder.ApplicationData is cross-platform under .NET 8:
             //   Windows -> %APPDATA%, Linux -> ~/.config, Windows-on-Wine -> prefix AppData.
-            string baseDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string dir = Path.Combine(baseDir, CONFIG_FOLDER_NAME);
-            Directory.CreateDirectory(dir);
-            return dir;
+            string baseDir = Program.UseAppdata ?
+				Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), CONFIG_FOLDER_NAME): AppContext.BaseDirectory;
+            try
+            {
+                Directory.CreateDirectory(baseDir);
+            }
+            catch (IOException)
+            { 
+            }
+			return baseDir;
         }
 
         private string GetProfilesDirectory()
@@ -406,7 +412,7 @@ namespace EveOPreview.Configuration.Implementation
 
         private string GetActiveProfilePointerPath()
         {
-            return Path.Combine(this.GetConfigDirectory(), ACTIVE_PROFILE_POINTER_NAME);
+            return Path.Combine(this.GetProfilesDirectory(), ACTIVE_PROFILE_POINTER_NAME);
         }
 
         private string ReadActiveProfilePointer()

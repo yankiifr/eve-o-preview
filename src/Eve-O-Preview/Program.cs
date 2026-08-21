@@ -1,4 +1,6 @@
 using System;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
 using EveOPreview.Configuration;
@@ -12,12 +14,13 @@ namespace EveOPreview
 	static class Program
 	{
 		private static string MUTEX_NAME = "EVE-O-Preview Single Instance Mutex";
+		public static bool UseAppdata = false;
 
 		private static Mutex _singleInstanceMutex;
 
 		/// <summary>The main entry point for the application.</summary>
 		[STAThread]
-		static void Main()
+		static void Main(string[] args)
 		{
 			// The very usual Mutex-based single-instance screening
 			// 'token' variable is used to store reference to the instance Mutex
@@ -30,6 +33,10 @@ namespace EveOPreview
 			{
 				return;
 			}
+
+			UseAppdata = args.Any(a =>
+			string.Equals(a, "--userappdata", StringComparison.OrdinalIgnoreCase));
+
 
 			ExceptionHandler handler = new ExceptionHandler();
 			handler.SetupExceptionHandlers();
