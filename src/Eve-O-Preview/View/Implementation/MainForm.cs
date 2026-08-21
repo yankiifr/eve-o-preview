@@ -32,8 +32,9 @@ namespace EveOPreview.View
         private HotkeyInputControl _cycleForwardControl;
         private HotkeyInputControl _cycleBackwardControl;
         private CheckedListBox _cycleMembersList;
-        private HotkeyInputControl _minimizeAllControl;
-        private bool _suppressCycleEvents;
+		private HotkeyInputControl _minimizeAllControl;
+		private HotkeyInputControl _refreshAllControl;
+		private bool _suppressCycleEvents;
         private int _hotkeyTopOffset;
         // Profiles tab + tray submenu.
         private ListBox _profilesList;
@@ -533,7 +534,7 @@ namespace EveOPreview.View
 
             Panel minimizePanel = this.BuildMinimizeAllRow();
             Panel cyclePanel = this.BuildCycleGroupsPanel();
-            this._hotkeyTopOffset = cyclePanel.Height + minimizePanel.Height;
+            this._hotkeyTopOffset = minimizePanel.Bottom + 5;
 
             // Add Fill first, then the docked-Top panels (last added sits on top).
             hotkeysTab.Controls.Add(this._hotkeyRowsPanel);
@@ -559,7 +560,7 @@ namespace EveOPreview.View
         // Master/detail editor for unlimited named cycle groups.
         private Panel BuildCycleGroupsPanel()
         {
-            Panel panel = new Panel { Dock = DockStyle.Top, Height = 212 };
+            Panel panel = new Panel { Dock = DockStyle.Top, Height = 220 };
 
             Label header = new Label
             {
@@ -572,7 +573,7 @@ namespace EveOPreview.View
             this._cycleGroupsList = new ListBox
             {
                 Location = new Point(6, 26),
-                Size = new Size(140, 118),
+                Size = new Size(150, 118),
                 IntegralHeight = false
             };
             this._cycleGroupsList.SelectedIndexChanged += (sender, e) =>
@@ -583,7 +584,7 @@ namespace EveOPreview.View
                 }
             };
 
-            Button addButton = new Button { Text = "Add", Location = new Point(6, 148), Size = new Size(44, 24) };
+            Button addButton = new Button { Text = "Add", Location = new Point(6, 148), Size = new Size(55, 32) };
             addButton.Click += (sender, e) =>
             {
                 string name = this.ShowTextInputDialog("Cycle group name:", "Add Cycle Group");
@@ -593,7 +594,7 @@ namespace EveOPreview.View
                 }
             };
 
-            Button removeButton = new Button { Text = "Remove", Location = new Point(52, 148), Size = new Size(54, 24) };
+            Button removeButton = new Button { Text = "Remove", Location = new Point(addButton.Right + 3, 148), Size = new Size(90, 32) };
             removeButton.Click += (sender, e) =>
             {
                 if (this._cycleGroupsList.SelectedIndex >= 0)
@@ -602,7 +603,7 @@ namespace EveOPreview.View
                 }
             };
 
-            Button renameButton = new Button { Text = "Rename", Location = new Point(108, 148), Size = new Size(58, 24) };
+            Button renameButton = new Button { Text = "Rename", Location = new Point(addButton.Left, addButton.Bottom+3), Size = new Size(148, 32) };
             renameButton.Click += (sender, e) =>
             {
                 if (this._cycleGroupsList.SelectedIndex >= 0)
@@ -616,7 +617,7 @@ namespace EveOPreview.View
             };
 
             Label forwardLabel = new Label { Text = "Forward:", Location = new Point(176, 28), AutoSize = true };
-            this._cycleForwardControl = new HotkeyInputControl { Location = new Point(238, 25), Size = new Size(200, 23) };
+            this._cycleForwardControl = new HotkeyInputControl { Location = new Point(forwardLabel.Right + 3, 25), Size = new Size(200, 23) };
             this._cycleForwardControl.HotkeyChanged += (sender, e) =>
             {
                 if (!this._suppressCycleEvents && (this._cycleGroupsList.SelectedIndex >= 0))
@@ -626,7 +627,7 @@ namespace EveOPreview.View
             };
 
             Label backLabel = new Label { Text = "Back:", Location = new Point(176, 56), AutoSize = true };
-            this._cycleBackwardControl = new HotkeyInputControl { Location = new Point(238, 53), Size = new Size(200, 23) };
+            this._cycleBackwardControl = new HotkeyInputControl { Location = new Point(forwardLabel.Right+3, 53), Size = new Size(200, 23) };
             this._cycleBackwardControl.HotkeyChanged += (sender, e) =>
             {
                 if (!this._suppressCycleEvents && (this._cycleGroupsList.SelectedIndex >= 0))
@@ -670,9 +671,9 @@ namespace EveOPreview.View
 
         private Panel BuildMinimizeAllRow()
         {
-            Panel panel = new Panel { Dock = DockStyle.Top, Height = 34 };
+            Panel panel = new Panel { Dock = DockStyle.Top, Height = 66 };
 
-            Label label = new Label { Text = "Minimize all clients:", Location = new Point(6, 9), AutoSize = true };
+            Label minimizeAllLabel = new Label { Text = "Minimize all clients:", Location = new Point(6, 9), AutoSize = true };
             this._minimizeAllControl = new HotkeyInputControl { Location = new Point(176, 6), Size = new Size(262, 23) };
             this._minimizeAllControl.HotkeyChanged += (sender, e) =>
             {
@@ -682,9 +683,22 @@ namespace EveOPreview.View
                 }
             };
 
-            panel.Controls.Add(label);
-            panel.Controls.Add(this._minimizeAllControl);
-            return panel;
+			Label refreshAllLabel = new Label { Text = "Refresh all clients:", Location = new Point(6, minimizeAllLabel.Bottom+3), AutoSize = true };
+			this._refreshAllControl = new HotkeyInputControl { Location = new Point(176, minimizeAllLabel.Bottom+6), Size = new Size(262, 23) };
+			this._refreshAllControl.HotkeyChanged += (sender, e) =>
+			{
+				if (!this._suppressCycleEvents)
+				{
+					this.RefreshAllHotkeyChanged?.Invoke(this._refreshAllControl.Hotkey);
+				}
+			};
+
+			panel.Controls.Add(minimizeAllLabel);
+			panel.Controls.Add(this._minimizeAllControl);
+
+			panel.Controls.Add(refreshAllLabel);
+			panel.Controls.Add(this._refreshAllControl);
+			return panel;
         }
 
         public void SetCycleGroups(IReadOnlyList<string> groupNames, int selectedIndex)
@@ -741,12 +755,16 @@ namespace EveOPreview.View
             this._suppressCycleEvents = false;
         }
 
-        public void SetMinimizeAllHotkey(Keys hotkey)
-        {
-            this._minimizeAllControl?.SetHotkeySilently(hotkey);
-        }
+		public void SetMinimizeAllHotkey(Keys hotkey)
+		{
+			this._minimizeAllControl?.SetHotkeySilently(hotkey);
+		}
+		public void SetRefreshAllHotkey(Keys hotkey)
+		{
+			this._refreshAllControl?.SetHotkeySilently(hotkey);
+		}
 
-        public Action<bool> ThemeChanged { get; set; }
+		public Action<bool> ThemeChanged { get; set; }
 
         // Adds the "Dark mode" checkbox to the General tab and a matching tray-menu toggle.
         private void InitThemeControls()
@@ -935,7 +953,7 @@ namespace EveOPreview.View
             this._activeProfileLabel = new Label
             {
                 Dock = DockStyle.Top,
-                Height = 24,
+                Height = 32,
                 Padding = new Padding(3),
                 Text = "Active profile:"
             };
@@ -956,16 +974,16 @@ namespace EveOPreview.View
                 WrapContents = true
             };
 
-            Button activateButton = new Button { Text = "Activate", Width = 80, Margin = new Padding(3) };
+            Button activateButton = new Button { Text = "Activate", Width = 90, Height = 32, Margin = new Padding(3) };
             activateButton.Click += (sender, e) => this.RaiseActivateSelected();
 
-            Button newButton = new Button { Text = "New", Width = 70, Margin = new Padding(3) };
+            Button newButton = new Button { Text = "New", Width = 70, Height = 32, Margin = new Padding(3) };
             newButton.Click += (sender, e) => this.ProfileNewRequested?.Invoke();
 
-            Button saveButton = new Button { Text = "Save", Width = 70, Margin = new Padding(3) };
+            Button saveButton = new Button { Text = "Save", Width = 70, Height = 32, Margin = new Padding(3) };
             saveButton.Click += (sender, e) => this.ProfileSaveRequested?.Invoke();
 
-            Button deleteButton = new Button { Text = "Delete", Width = 70, Margin = new Padding(3) };
+            Button deleteButton = new Button { Text = "Delete", Width = 70, Height = 32, Margin = new Padding(3) };
             deleteButton.Click += (sender, e) =>
             {
                 if (this._profilesList.SelectedItem != null)
@@ -974,24 +992,24 @@ namespace EveOPreview.View
                 }
             };
 
-            Button resetButton = new Button { Text = "Reset to Defaults", Width = 120, Margin = new Padding(3) };
-            resetButton.Click += (sender, e) => this.ProfileResetRequested?.Invoke();
-
-            Button exportButton = new Button { Text = "Export", Width = 70, Margin = new Padding(3) };
+            Button exportButton = new Button { Text = "Export", Width = 80, Height = 32, Margin = new Padding(3) };
             exportButton.Click += (sender, e) => this.ProfileExportRequested?.Invoke();
 
-            Button importButton = new Button { Text = "Import", Width = 70, Margin = new Padding(3) };
+            Button importButton = new Button { Text = "Import", Width = 80, Height = 32, Margin = new Padding(3) };
             importButton.Click += (sender, e) => this.ProfileImportRequested?.Invoke();
 
-            buttons.Controls.Add(activateButton);
+			Button resetButton = new Button { Text = "Reset to Defaults", Width = 180, Height = 32, Margin = new Padding(3) };
+			resetButton.Click += (sender, e) => this.ProfileResetRequested?.Invoke();
+
+			buttons.Controls.Add(activateButton);
             buttons.Controls.Add(newButton);
             buttons.Controls.Add(saveButton);
             buttons.Controls.Add(deleteButton);
-            buttons.Controls.Add(resetButton);
             buttons.Controls.Add(exportButton);
             buttons.Controls.Add(importButton);
+			buttons.Controls.Add(resetButton);
 
-            TabPage profilesTab = new TabPage
+			TabPage profilesTab = new TabPage
             {
                 Name = "ProfilesTabPage",
                 Text = "Profiles",
@@ -1282,9 +1300,10 @@ namespace EveOPreview.View
         public Action<int, string> CycleGroupRenameRequested { get; set; }
         public Action<int, bool, Keys> CycleGroupHotkeyChanged { get; set; }
         public Action<int, string, bool> CycleGroupMembershipChanged { get; set; }
-        public Action<Keys> MinimizeAllHotkeyChanged { get; set; }
+		public Action<Keys> MinimizeAllHotkeyChanged { get; set; }
+		public Action<Keys> RefreshAllHotkeyChanged { get; set; }
 
-        public Action<string> ProfileActivateRequested { get; set; }
+		public Action<string> ProfileActivateRequested { get; set; }
         public Action ProfileNewRequested { get; set; }
         public Action ProfileSaveRequested { get; set; }
         public Action<string> ProfileDeleteRequested { get; set; }

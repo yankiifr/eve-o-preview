@@ -83,18 +83,20 @@ namespace EveOPreview.View
         void SetCycleGroups(IReadOnlyList<string> groupNames, int selectedIndex);
         // Detail for the selected group: its forward/back hotkeys and the titles of its member clients.
         void SetCycleGroupDetail(Keys forward, Keys backward, IReadOnlyList<string> memberClients);
-        void SetMinimizeAllHotkey(Keys hotkey);
+		void SetMinimizeAllHotkey(Keys hotkey);
+		void SetRefreshAllHotkey(Keys hotkey);
 
-        Action<int> CycleGroupSelected { get; set; }
+		Action<int> CycleGroupSelected { get; set; }
         Action<string> CycleGroupAddRequested { get; set; }
         Action<int> CycleGroupRemoveRequested { get; set; }
         Action<int, string> CycleGroupRenameRequested { get; set; }
         Action<int, bool, Keys> CycleGroupHotkeyChanged { get; set; }      // (groupIndex, isForward, hotkey)
         Action<int, string, bool> CycleGroupMembershipChanged { get; set; } // (groupIndex, clientTitle, isMember)
-        Action<Keys> MinimizeAllHotkeyChanged { get; set; }
+		Action<Keys> MinimizeAllHotkeyChanged { get; set; }
+		Action<Keys> RefreshAllHotkeyChanged { get; set; }
 
-        // --- Profiles ---
-        Action<string> ProfileActivateRequested { get; set; }
+		// --- Profiles ---
+		Action<string> ProfileActivateRequested { get; set; }
         Action ProfileNewRequested { get; set; }
         Action ProfileSaveRequested { get; set; }
         Action<string> ProfileDeleteRequested { get; set; }

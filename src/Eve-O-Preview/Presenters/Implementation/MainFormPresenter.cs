@@ -57,6 +57,7 @@ namespace EveOPreview.Presenters
             this.View.CycleGroupHotkeyChanged = this.SaveCycleGroupHotkey;
             this.View.CycleGroupMembershipChanged = this.SaveCycleGroupMembership;
             this.View.MinimizeAllHotkeyChanged = this.SaveMinimizeAllHotkey;
+            this.View.RefreshAllHotkeyChanged = this.SaveRefreshAllHotkey;
             this.View.ProfileActivateRequested = this.ActivateProfile;
             this.View.ProfileNewRequested = this.CreateProfile;
             this.View.ProfileSaveRequested = this.SaveCurrentProfile;
@@ -343,10 +344,11 @@ namespace EveOPreview.Presenters
 
             this.View.SetCycleGroups(groups.Select(group => group.Name).ToList(), this._selectedCycleGroupIndex);
             this.PushSelectedCycleGroupDetail();
-            this.View.SetMinimizeAllHotkey(this.FirstHotkey(this._configuration.MinimizeAllClientsHotkeys));
-        }
+			this.View.SetMinimizeAllHotkey(this.FirstHotkey(this._configuration.MinimizeAllClientsHotkeys));
+			this.View.SetRefreshAllHotkey(this.FirstHotkey(this._configuration.RefreshMinimizedClientsHotkeys));
+		}
 
-        private void PushSelectedCycleGroupDetail()
+		private void PushSelectedCycleGroupDetail()
         {
             List<CycleGroupConfiguration> groups = this.CycleGroups;
 
@@ -476,17 +478,25 @@ namespace EveOPreview.Presenters
             await this._mediator.Send(new RefreshHotkeys());
         }
 
-        private async void SaveMinimizeAllHotkey(Keys hotkey)
-        {
-            this._configuration.MinimizeAllClientsHotkeys = (hotkey == Keys.None)
-                ? new List<string>()
-                : new List<string> { this._configuration.KeyToString(hotkey) };
-            this._configurationStorage.Save();
-            await this._mediator.Send(new RefreshHotkeys());
-        }
+		private async void SaveMinimizeAllHotkey(Keys hotkey)
+		{
+			this._configuration.MinimizeAllClientsHotkeys = (hotkey == Keys.None)
+				? new List<string>()
+				: new List<string> { this._configuration.KeyToString(hotkey) };
+			this._configurationStorage.Save();
+			await this._mediator.Send(new RefreshHotkeys());
+		}
+		private async void SaveRefreshAllHotkey(Keys hotkey)
+		{
+			this._configuration.RefreshMinimizedClientsHotkeys = (hotkey == Keys.None)
+				? new List<string>()
+				: new List<string> { this._configuration.KeyToString(hotkey) };
+			this._configurationStorage.Save();
+			await this._mediator.Send(new RefreshHotkeys());
+		}
 
-        // --- Profiles ---
-        private void RefreshProfilesView()
+		// --- Profiles ---
+		private void RefreshProfilesView()
         {
             this.View.SetProfiles(this._configurationStorage.GetProfileNames(), this._configurationStorage.ActiveProfileName);
         }
