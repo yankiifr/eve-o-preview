@@ -446,6 +446,23 @@ namespace EveOPreview.Services
         public void Stop()
         {
             this._thumbnailUpdateTimer.Stop();
+            this.SaveCurrentThumbnailLayouts();
+        }
+
+        // Thumbnails can be resized and moved individually, so their current
+        // geometry has to be stored before the application goes down
+        private void SaveCurrentThumbnailLayouts()
+        {
+            foreach (IThumbnailView view in this._thumbnailViews.Values)
+            {
+                if (!this.IsManageableThumbnail(view))
+                {
+                    continue;
+                }
+
+                this._configuration.SetThumbnailLocation(view.Title, this._activeClient.Title, view.ThumbnailLocation);
+                this._configuration.SetThumbnailSize(view.Title, view.ThumbnailSize);
+            }
         }
 
         private void ThumbnailUpdateTimerTick(object sender, EventArgs e)
@@ -469,7 +486,7 @@ namespace EveOPreview.Services
                     initialSize = this._configuration.PerClientThumbnailSize[process.Title];
                 }
 
-                IThumbnailView view = this._thumbnailViewFactory.Create(process.Handle, process.Title, this._configuration.ThumbnailSize, process.Id);
+                IThumbnailView view = this._thumbnailViewFactory.Create(process.Handle, process.Title, initialSize, process.Id);
                 view.IsOverlayEnabled = this._configuration.ShowThumbnailOverlays;
                 view.IsExcludedFromCycleGroup = false;
                 view.SetFrames(this._configuration.ShowThumbnailFrames);
@@ -901,7 +918,7 @@ namespace EveOPreview.Services
         }
 
 
-        private async void ThumbnailViewResized(IntPtr id)
+        private void ThumbnailViewResized(IntPtr id)
         {
             if (this._ignoreViewEvents)
             {
@@ -910,11 +927,21 @@ namespace EveOPreview.Services
 
             IThumbnailView view = this._thumbnailViews[id];
 
-            this.SetThumbnailsSize(view.ThumbnailSize);
+            // Each client keeps its own thumbnail size, so resizing one thumbnail
+            // should not resize all the other ones
+            if (!this.IsManageableThumbnail(view))
+            {
+                view.Refresh(false);
+                return;
+            }
 
+            this._configuration.SetThumbnailSize(view.Title, view.ThumbnailSize);
             view.Refresh(false);
 
-            await this._mediator.Publish(new ThumbnailActiveSizeUpdated(view.ThumbnailSize));
+            // The resize event is raised on every mouse move during the resize operation.
+            // Saving the configuration file on each of them would hammer the disk, so the
+            // very same delayed notification mechanics as for the thumbnail moves is used here
+            this.EnqueueLocationChange(view);
         }
 
         private void ThumbnailViewMoved(IntPtr id)
@@ -990,8 +1017,10 @@ namespace EveOPreview.Services
                 return;
             }
 
-            int width = this._configuration.ThumbnailSize.Width;
-            int height = this._configuration.ThumbnailSize.Height;
+            // Thumbnails can have their own individual sizes so the actual view size
+            // has to be used here instead of the default one
+            int width = view.ThumbnailSize.Width;
+            int height = view.ThumbnailSize.Height;
 
             // TODO Extract method
             int baseX = view.ThumbnailLocation.X;
@@ -1014,8 +1043,10 @@ namespace EveOPreview.Services
 
                 int testX = testView.ThumbnailLocation.X;
                 int testY = testView.ThumbnailLocation.Y;
+                int testWidth = testView.ThumbnailSize.Width;
+                int testHeight = testView.ThumbnailSize.Height;
 
-                Point[] testPoints = { new Point(testX, testY), new Point(testX + width, testY), new Point(testX, testY + height), new Point(testX + width, testY + height) };
+                Point[] testPoints = { new Point(testX, testY), new Point(testX + testWidth, testY), new Point(testX, testY + testHeight), new Point(testX + testWidth, testY + testHeight) };
 
                 var delta = ThumbnailManager.TestViewPoints(viewPoints, testPoints, thresholdX, thresholdY);
 
