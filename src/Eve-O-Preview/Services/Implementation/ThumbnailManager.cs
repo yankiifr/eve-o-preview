@@ -251,6 +251,21 @@ namespace EveOPreview.Services
 		public void Stop()
 		{
 			this._thumbnailUpdateTimer.Stop();
+			this.SaveCurrentThumbnailLayouts();
+		}
+
+		private void SaveCurrentThumbnailLayouts()
+		{
+			foreach (IThumbnailView view in this._thumbnailViews.Values)
+			{
+				if (!this.IsManageableThumbnail(view))
+				{
+					continue;
+				}
+
+				this._configuration.SetThumbnailLocation(view.Title, this._activeClient.Title, view.ThumbnailLocation);
+				this._configuration.SetThumbnailSize(view.Title, view.ThumbnailSize);
+			}
 		}
 
 		private void ThumbnailUpdateTimerTick(object sender, EventArgs e)
@@ -274,7 +289,7 @@ namespace EveOPreview.Services
 					initialSize = this._configuration.PerClientThumbnailSize[process.Title];
 				}
 
-				IThumbnailView view = this._thumbnailViewFactory.Create(process.Handle, process.Title, this._configuration.ThumbnailSize);
+				IThumbnailView view = this._thumbnailViewFactory.Create(process.Handle, process.Title, initialSize);
 				view.IsOverlayEnabled = this._configuration.ShowThumbnailOverlays;
 				view.SetFrames(this._configuration.ShowThumbnailFrames);
 				// Max/Min size limitations should be set AFTER the frames are disabled
@@ -661,12 +676,9 @@ namespace EveOPreview.Services
 			}
 
 			IThumbnailView view = this._thumbnailViews[id];
-
-			this.SetThumbnailsSize(view.ThumbnailSize);
-
+			this._configuration.SetThumbnailSize(view.Title, view.ThumbnailSize);
 			view.Refresh(false);
-
-			await this._mediator.Publish(new ThumbnailActiveSizeUpdated(view.ThumbnailSize));
+			await this._mediator.Send(new SaveConfiguration());
 		}
 
 		private void ThumbnailViewMoved(IntPtr id)

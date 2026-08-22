@@ -315,6 +315,16 @@ namespace EveOPreview.Configuration.Implementation
 			Size sizeOfThumbnail;
 			return this.PerClientThumbnailSize.TryGetValue(currentClient, out sizeOfThumbnail) ? sizeOfThumbnail : defaultSize;
 		}
+
+		public void SetThumbnailSize(string currentClient, Size size)
+		{
+			if (string.IsNullOrEmpty(currentClient))
+			{
+				return;
+			}
+
+			this.PerClientThumbnailSize[currentClient] = size;
+		}
 		public ZoomAnchor GetZoomAnchor(string currentClient, ZoomAnchor defaultZoomAnchor)
 		{
 			ZoomAnchor zoomAnchor;

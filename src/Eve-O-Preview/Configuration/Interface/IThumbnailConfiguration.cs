@@ -77,6 +77,7 @@ namespace EveOPreview.Configuration
 
 		Point GetThumbnailLocation(string currentClient, string activeClient, Point defaultLocation);
 		Size GetThumbnailSize(string currentClient, string activeClient, Size defaultSize);
+		void SetThumbnailSize(string currentClient, Size size);
 		ZoomAnchor GetZoomAnchor(string currentClient, ZoomAnchor defaultZoomAnchor);
 		void SetThumbnailLocation(string currentClient, string activeClient, Point location);
 

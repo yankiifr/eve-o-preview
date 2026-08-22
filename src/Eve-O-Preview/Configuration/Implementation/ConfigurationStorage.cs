@@ -19,22 +19,22 @@ namespace EveOPreview.Configuration.Implementation
 		public void Load()
 		{
 			string filename = this.GetConfigFileName();
+			string backupFilename = this.GetBackupConfigFileName(filename);
 
-			if (!File.Exists(filename))
+			if (!File.Exists(filename) && !File.Exists(backupFilename))
 			{
 				return;
 			}
-
-			string rawData = File.ReadAllText(filename);
 
 			JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings()
 			{
 				ObjectCreationHandling = ObjectCreationHandling.Replace
 			};
 
-			// StageHotkeyArraysToAvoidDuplicates(rawData);
-
-			JsonConvert.PopulateObject(rawData, this._thumbnailConfiguration, jsonSerializerSettings);
+			if (!this.TryLoad(filename, jsonSerializerSettings))
+			{
+				this.TryLoad(backupFilename, jsonSerializerSettings);
+			}
 
 			// Validate data after loading it
 			this._thumbnailConfiguration.ApplyRestrictions();
@@ -44,15 +44,58 @@ namespace EveOPreview.Configuration.Implementation
 		{
 			string rawData = JsonConvert.SerializeObject(this._thumbnailConfiguration, Formatting.Indented);
 			string filename = this.GetConfigFileName();
+			string backupFilename = this.GetBackupConfigFileName(filename);
+			string temporaryFilename = filename + ".tmp";
 
 			try
 			{
-				File.WriteAllText(filename, rawData);
+				File.WriteAllText(temporaryFilename, rawData);
+				if (File.Exists(filename))
+				{
+					File.Copy(filename, backupFilename, true);
+				}
+
+				File.Move(temporaryFilename, filename, true);
 			}
 			catch (IOException)
 			{
 				// Ignore error if for some reason the updated config cannot be written down
 			}
+			finally
+			{
+				if (File.Exists(temporaryFilename))
+				{
+					File.Delete(temporaryFilename);
+				}
+			}
+		}
+
+		private bool TryLoad(string filename, JsonSerializerSettings settings)
+		{
+			if (!File.Exists(filename))
+			{
+				return false;
+			}
+
+			try
+			{
+				string rawData = File.ReadAllText(filename);
+				JsonConvert.PopulateObject(rawData, this._thumbnailConfiguration, settings);
+				return true;
+			}
+			catch (IOException)
+			{
+				return false;
+			}
+			catch (JsonException)
+			{
+				return false;
+			}
+		}
+
+		private string GetBackupConfigFileName(string filename)
+		{
+			return filename + ".backup";
 		}
 
 		private string GetConfigFileName()
