@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
 namespace EveOPreview.Configuration
@@ -69,6 +70,7 @@ namespace EveOPreview.Configuration
 		Color ActiveClientHighlightColor { get; set; }
 		Color PreventPreviewColor { get; set; }
 		int ActiveClientHighlightThickness { get; set; }
+		DashStyle ActiveClientHighlightDashStyle { get; set; }
 		Color OverlayLabelColor { get; set; }
 		Color OverlayLabelOutlineColor { get; set; }
 		int OverlayLabelOutlineSize { get; set; }

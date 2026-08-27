@@ -7,6 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Shapes;
 using Rectangle = System.Drawing.Rectangle;
 
 namespace EveOPreview.View
@@ -20,6 +21,13 @@ namespace EveOPreview.View
 		private readonly Action<object, MouseEventArgs> _areaMouseUpAction;
 		private readonly Action<object, MouseEventArgs> _areaMouseMoveAction;
 		private bool _showOverlayText = true;
+		private bool _showBorder = false;
+		private int _showBorderOffset = 0;
+		private Color _showBorderColour = Color.White;
+		private int _showBorderWidth = 1;
+		private Color _fakeBackground = Color.Red;
+		private bool _showFakeBackground = false;
+		private DashStyle _showBorderDashStyle = DashStyle.Solid;
 		#endregion
 
 		public ThumbnailOverlay(Form owner,
@@ -36,6 +44,8 @@ namespace EveOPreview.View
 			this._areaMouseDownAction = areaMouseDownAction;
 			this._areaMouseUpAction = areaMouseUpAction;
 			this._areaMouseMoveAction = areaMouseMoveAction;
+
+			this.DoubleBuffered = true;
 
 			InitializeComponent();
 		}
@@ -65,6 +75,15 @@ namespace EveOPreview.View
 		{
 			this.OverlayLabel.Text = label;
 		}
+
+		public void SetBorder(bool showBorder, Color borderColor, int borderWidth, DashStyle ds)
+		{
+			this._showBorder = showBorder;
+			this._showBorderColour = borderColor;
+			this._showBorderWidth = borderWidth;
+			this._showBorderDashStyle = ds;
+		}
+
 		public void SetCycleGroupIndicator(bool displayCycleGroup, ZoomAnchor anchor)
 		{
 			if (displayCycleGroup)
@@ -217,28 +236,14 @@ namespace EveOPreview.View
 
 			if (!enable)
 			{
-				OverlayAreaPictureBox.BackColor = Color.Transparent;
-				OverlayLabel.BackColor = Color.Transparent;
-				OverlayAreaPictureBox.Dock = DockStyle.Fill;
+				_showFakeBackground = false;
+				this.OverlayAreaPictureBox.BackColor = Color.Transparent;
 			}
 			else
 			{
-				OverlayAreaPictureBox.BackColor = bgColor;
-				OverlayLabel.BackColor = Color.Transparent;
-				OverlayAreaPictureBox.Dock = DockStyle.None;
-			}
-
-			var left = 0 + highlightSize;
-			var top = 0 + highlightSize;
-			if (IsLocationUpdateRequired(OverlayAreaPictureBox.Location, left, top))
-			{
-				OverlayAreaPictureBox.Location = new System.Drawing.Point(left, top);
-			}
-			var width = this.ClientSize.Width - (highlightSize * 2);
-			var height = this.ClientSize.Height - (highlightSize * 2);
-			if (IsSizeUpdateRequired(OverlayAreaPictureBox.Size, width, height))
-			{
-				OverlayAreaPictureBox.Size = new System.Drawing.Size(width, height);
+				_fakeBackground = bgColor;
+				this.OverlayAreaPictureBox.BackColor = bgColor;
+				_showFakeBackground = true;
 			}
 		}
 
@@ -346,10 +351,38 @@ namespace EveOPreview.View
 			TextRenderer.DrawText(e.Graphics, l.Text, l.Font, bounds, l.ForeColor, flags);
 
 		}
+		private void IncreaseHighlightDashOffset()
+		{
+			_showBorderOffset++;
+		}
 
 		private void OverlayAreaPictureBox_Paint(object sender, PaintEventArgs e)
 		{
+
+			if (this._showFakeBackground)
+			{
+				using (Brush bb = new SolidBrush(_fakeBackground))
+				{
+					e.Graphics.FillRectangle(
+						bb,
+						0,
+						0,
+						this.ClientSize.Width,
+						this.ClientSize.Height);
+				}
+			}
+
 			if (this._showOverlayText) PaintDrawText(e, OverlayLabel);
+
+			if (this._showBorder)
+			{
+				int halfSize = (int)Math.Round((double)(_showBorderWidth / 2),0);
+				using (Pen pp = new Pen(_showBorderColour, _showBorderWidth)) {
+					pp.DashStyle = _showBorderDashStyle;
+					pp.DashOffset = _showBorderOffset; 
+					e.Graphics.DrawRectangle(pp, halfSize, halfSize, this.ClientSize.Width -_showBorderWidth,this.ClientSize.Height - _showBorderWidth );
+				}
+			}
 		}
 
 		protected override CreateParams CreateParams

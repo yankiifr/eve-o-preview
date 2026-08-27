@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using EveOPreview.Configuration;
 using EveOPreview.Services;
@@ -28,7 +29,7 @@ namespace EveOPreview.View
 		void SetCycleGroupIndicator(bool displayCycleGroup, ZoomAnchor anchor);
 		void SetTopMost(bool enableTopmost);
 		void SetHighlight();
-		void SetHighlight(bool enabled, int width);
+		void SetHighlight(bool enabled, int width, DashStyle ds);
 		bool IsPreventPreviews();
 		void SetPreventPreviews();
 		void ZoomIn(ViewZoomAnchor anchor, int zoomFactor);

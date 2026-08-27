@@ -27,7 +27,7 @@ namespace EveOPreview.Services
 		private const int WINDOW_POSITION_THRESHOLD_LOW = -10_000;
 		private const int WINDOW_POSITION_THRESHOLD_HIGH = 31_000;
 		private const int WINDOW_SIZE_THRESHOLD = 10;
-		private const int FORCED_REFRESH_CYCLE_THRESHOLD = 2;
+		private const int FORCED_REFRESH_CYCLE_THRESHOLD = 20;
 		private const int DEFAULT_LOCATION_CHANGE_NOTIFICATION_DELAY = 2;
 		private int ProcessorCount = Environment.ProcessorCount;
 
@@ -700,7 +700,8 @@ namespace EveOPreview.Services
 
                 view.SetHighlight(
                     this._configuration.EnableActiveClientHighlight && (view.Id == this._activeClient.Handle),
-                    this._configuration.ActiveClientHighlightThickness);
+                    this._configuration.ActiveClientHighlightThickness,
+                    this._configuration.ActiveClientHighlightDashStyle);
 
                 if (!view.IsActive)
                 {

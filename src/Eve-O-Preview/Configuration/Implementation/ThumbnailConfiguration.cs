@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using Newtonsoft.Json;
@@ -155,7 +156,9 @@ namespace EveOPreview.Configuration.Implementation
 
             this.EnableActiveClientHighlight = false;
             this.ActiveClientHighlightColor = Color.GreenYellow;
-            this.PreventPreviewColor = Color.Purple;
+            this.ActiveClientHighlightDashStyle = DashStyle.Solid;
+
+			this.PreventPreviewColor = Color.Purple;
             this.ActiveClientHighlightThickness = 3;
 
 			this.OverlayLabelColor = Color.Orange;
@@ -252,7 +255,6 @@ namespace EveOPreview.Configuration.Implementation
 
         [JsonProperty("PerClientActiveClientHighlightColor")]
         public Dictionary<string, Color> PerClientActiveClientHighlightColor { get; set; }
-
 		[JsonProperty("PerClientPreventPreviews")]
 		public Dictionary<string, bool> PerClientPreventPreviews { get; set; }
 		[JsonProperty("PerClientCoreAffinity")]
@@ -343,6 +345,7 @@ namespace EveOPreview.Configuration.Implementation
         public int ThumbnailSnapToGridSizeY { get; set; }
 
         public bool EnableActiveClientHighlight { get; set; }
+        public DashStyle ActiveClientHighlightDashStyle { get; set; }
 
 		public Color ActiveClientHighlightColor { get; set; }
 		public Color PreventPreviewColor { get; set; }

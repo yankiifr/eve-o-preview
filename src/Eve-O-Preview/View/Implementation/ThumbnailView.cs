@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 using EveOPreview.Configuration;
@@ -313,10 +314,10 @@ namespace EveOPreview.View
 
 		public void SetHighlight()
 		{
-			SetHighlight(_config.EnableActiveClientHighlight, _config.ActiveClientHighlightThickness);
+			SetHighlight(_config.EnableActiveClientHighlight, _config.ActiveClientHighlightThickness, _config.ActiveClientHighlightDashStyle);
 		}
 
-		public void SetHighlight(bool enabled, int width)
+		public void SetHighlight(bool enabled, int width, DashStyle ds)
 		{
 			if (this._isHighlightRequested == enabled)
 			{
@@ -327,12 +328,14 @@ namespace EveOPreview.View
 			{
 				this._isHighlightRequested = true;
 				this._highlightWidth = width;
-				this.BackColor = _myBorderColor.Value;
+				//this.BackColor = _myBorderColor.Value;
+				this._overlay.SetBorder(true, _myBorderColor.Value, width, ds);
 			}
 			else
 			{
 				this._isHighlightRequested = false;
-				this.BackColor = Color.Black;
+				//this.BackColor = Color.Black;
+				this._overlay.SetBorder(false, _myBorderColor.Value, width, ds);
 			}
 
 			this._isSizeChanged = true;
@@ -340,7 +343,7 @@ namespace EveOPreview.View
 
 		public void ClearBorder()
 		{
-			this.SetHighlight(false, 0);
+			this.SetHighlight(false, 0, DashStyle.Solid);
 			this.Refresh(true);
 		}
 
@@ -434,7 +437,8 @@ namespace EveOPreview.View
 		public void Refresh(bool forceRefresh)
 		{
 			this.RefreshThumbnail(forceRefresh);
-			this.HighlightThumbnail(forceRefresh || this._isSizeChanged);
+			//this.HighlightThumbnail(forceRefresh || this._isSizeChanged);
+			this.HighlightThumbnail(this._isSizeChanged);
 			this.RefreshOverlay(forceRefresh || this._isSizeChanged || this._isLocationChanged);
 
 			this._isSizeChanged = false;
