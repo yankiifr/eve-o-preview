@@ -56,7 +56,9 @@ namespace EveOPreview.Presenters
             this.View.CycleGroupRenameRequested = this.RenameCycleGroup;
             this.View.CycleGroupHotkeyChanged = this.SaveCycleGroupHotkey;
             this.View.CycleGroupMembershipChanged = this.SaveCycleGroupMembership;
-            this.View.MinimizeAllHotkeyChanged = this.SaveMinimizeAllHotkey;
+            this.View.CycleGroupMembershipRenumberRequested = this.RenumberCycleGroupMembership;
+            this.View.PushSelectedCycleGroupDetailRequested = this.PushSelectedCycleGroupDetail;
+			this.View.MinimizeAllHotkeyChanged = this.SaveMinimizeAllHotkey;
             this.View.RefreshAllHotkeyChanged = this.SaveRefreshAllHotkey;
             this.View.ProfileActivateRequested = this.ActivateProfile;
             this.View.ProfileNewRequested = this.CreateProfile;
@@ -447,7 +449,32 @@ namespace EveOPreview.Presenters
             await this._mediator.Send(new RefreshHotkeys());
         }
 
-        private async void SaveCycleGroupMembership(int index, string clientTitle, bool isMember)
+        private async void RenumberCycleGroupMembership(int index, List<string> members)
+        {
+			List<CycleGroupConfiguration> groups = this.CycleGroups;
+			if ((index < 0) || (index >= groups.Count) )
+			{
+				return;
+			}
+
+			CycleGroupConfiguration group = groups[index];
+			if (group.ClientsOrder == null)
+			{
+				group.ClientsOrder = new Dictionary<string, int>();
+			}
+
+			for (int i = 0; i < members.Count; i++)
+			{
+				string member = members[i];
+				if (group.ClientsOrder.ContainsKey(member))
+				{
+					group.ClientsOrder[member] = i + 1;
+				}
+			}
+
+		}
+
+		private async void SaveCycleGroupMembership(int index, string clientTitle, bool isMember)
         {
             List<CycleGroupConfiguration> groups = this.CycleGroups;
             if ((index < 0) || (index >= groups.Count) || string.IsNullOrEmpty(clientTitle))

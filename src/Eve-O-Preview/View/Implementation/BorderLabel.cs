@@ -13,7 +13,7 @@ namespace EveOPreview.View.Implementation
 	public partial class BorderLabel : Label
 	{
 		// from https://www.codeproject.com/articles/A-Simple-Label-Control-with-Border-Effect
-		private float borderSize;
+		private int borderSize;
 		private Color borderColor;
 
 		private PointF point;
@@ -25,7 +25,7 @@ namespace EveOPreview.View.Implementation
 		#region Constructor
 		public BorderLabel()
 		{
-			this.borderSize = 1f;
+			this.borderSize = 1;
 			this.borderColor = this.ForeColor;
 			this.drawPath = new GraphicsPath();
 			this.drawPen = new Pen(new SolidBrush(this.borderColor), borderSize);
@@ -40,7 +40,7 @@ namespace EveOPreview.View.Implementation
 		[Category("Appearance")]
 		[Description("The border's thickness")]
 		[DefaultValue(1f)]
-		public float BorderSize
+		public int BorderSize
 		{
 			get { return this.borderSize; }
 			set

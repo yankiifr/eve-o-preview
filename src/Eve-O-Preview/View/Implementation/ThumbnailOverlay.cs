@@ -127,7 +127,7 @@ namespace EveOPreview.View
 			}
 		}
 
-		public void SetPropertiesOverlayLabel(Font font, System.Drawing.Color foregroundColour, System.Drawing.Color outlineColour, float outlineSize, ZoomAnchor anchor)
+		public void SetPropertiesOverlayLabel(Font font, System.Drawing.Color foregroundColour, System.Drawing.Color outlineColour, int outlineSize, ZoomAnchor anchor)
 		{
 			if (
 				this.OverlayLabel.Font.Size != font.Size ||
@@ -258,6 +258,8 @@ namespace EveOPreview.View
 				return;
 			}
 
+			/*
+
 			float fontSize = e.Graphics.DpiY * l.Font.SizeInPoints / 72;
 			var drawSize = e.Graphics.MeasureString(l.Text, l.Font, new PointF(), StringFormat.GenericTypographic);
 			var drawPath = new GraphicsPath();
@@ -319,6 +321,29 @@ namespace EveOPreview.View
 			drawPath.Dispose();
 			drawPen.Dispose();
 			forecolorBrush.Dispose();
+
+			*/
+
+
+				Rectangle bounds = new Rectangle(l.Left, l.Top, l.Width, l.Height);
+				// The text is stamped around the base position in a filled square pattern,
+				// which produces a solid outline of the requested thickness
+				for (int dx = - l.BorderSize; dx <= l.BorderSize; dx++)
+				{
+					for (int dy = -l.BorderSize; dy <= l.BorderSize; dy++)
+					{
+						if ((dx == 0) && (dy == 0))
+						{
+							continue;
+						}
+
+						Rectangle outlineBounds = bounds;
+						outlineBounds.Offset(dx, dy);
+						TextRenderer.DrawText(e.Graphics, l.Text, l.Font, outlineBounds, l.BorderColor, flags);
+					}
+				}
+
+			TextRenderer.DrawText(e.Graphics, l.Text, l.Font, bounds, l.ForeColor, flags);
 
 		}
 

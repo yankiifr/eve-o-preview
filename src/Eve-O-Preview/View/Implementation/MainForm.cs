@@ -32,6 +32,7 @@ namespace EveOPreview.View
         private HotkeyInputControl _cycleForwardControl;
         private HotkeyInputControl _cycleBackwardControl;
         private CheckedListBox _cycleMembersList;
+		private bool _allowCycleMemberListCheckToggle;
 		private HotkeyInputControl _minimizeAllControl;
 		private HotkeyInputControl _refreshAllControl;
 		private bool _suppressCycleEvents;
@@ -79,7 +80,8 @@ namespace EveOPreview.View
             this.InitHotkeysTab();
             this.InitProfilesTab();
             this.InitThemeControls();
-            this.InitTabAutoSizing();
+			this.InitTabSeparator();
+			this.InitTabAutoSizing();
         }
 
         public bool MinimizeToTray
@@ -534,7 +536,6 @@ namespace EveOPreview.View
 
             Panel minimizePanel = this.BuildMinimizeAllRow();
             Panel cyclePanel = this.BuildCycleGroupsPanel();
-            this._hotkeyTopOffset = minimizePanel.Bottom + 5;
 
             // Add Fill first, then the docked-Top panels (last added sits on top).
             hotkeysTab.Controls.Add(this._hotkeyRowsPanel);
@@ -542,9 +543,11 @@ namespace EveOPreview.View
             hotkeysTab.Controls.Add(cyclePanel);
 
             tabControl.TabPages.Add(hotkeysTab);
-        }
 
-        private Label CreateSectionLabel(string text)
+            this._hotkeyTopOffset = this._hotkeyRowsPanel.Top;
+		}
+
+		private Label CreateSectionLabel(string text)
         {
             return new Label
             {
@@ -587,7 +590,7 @@ namespace EveOPreview.View
             Button addButton = new Button { Text = "Add", Location = new Point(6, 148), Size = new Size(55, 32) };
             addButton.Click += (sender, e) =>
             {
-                string name = this.ShowTextInputDialog("Cycle group name:", "Add Cycle Group");
+                string name = this.ShowTextInputDialog("Cycle group name:", "Add Cycle Group","");
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     this.CycleGroupAddRequested?.Invoke(name);
@@ -608,7 +611,7 @@ namespace EveOPreview.View
             {
                 if (this._cycleGroupsList.SelectedIndex >= 0)
                 {
-                    string name = this.ShowTextInputDialog("New name:", "Rename Cycle Group");
+                    string name = this.ShowTextInputDialog("New name:", "Rename Cycle Group", this._cycleGroupsList.Items[this._cycleGroupsList.SelectedIndex].ToString());
                     if (!string.IsNullOrWhiteSpace(name))
                     {
                         this.CycleGroupRenameRequested?.Invoke(this._cycleGroupsList.SelectedIndex, name);
@@ -644,17 +647,94 @@ namespace EveOPreview.View
                 CheckOnClick = true,
                 IntegralHeight = false
             };
-            this._cycleMembersList.ItemCheck += (sender, e) =>
-            {
-                if (this._suppressCycleEvents || (this._cycleGroupsList.SelectedIndex < 0))
-                {
-                    return;
-                }
-                string title = this._cycleMembersList.Items[e.Index].ToString();
-                this.CycleGroupMembershipChanged?.Invoke(this._cycleGroupsList.SelectedIndex, title, e.NewValue == CheckState.Checked);
-            };
+			this._cycleMembersList.ItemCheck += (sender, e) =>
+			{
+				if (!this._allowCycleMemberListCheckToggle)
+				{
+					e.NewValue = e.CurrentValue; // cancel the click-driven toggle
+					return;
+				}
 
-            panel.Controls.Add(header);
+				if (this._suppressCycleEvents || (this._cycleGroupsList.SelectedIndex < 0))
+				{
+					return;
+				}
+				string title = this._cycleMembersList.Items[e.Index].ToString();
+				this.CycleGroupMembershipChanged?.Invoke(this._cycleGroupsList.SelectedIndex, title, e.NewValue == CheckState.Checked);
+			};
+
+			this._cycleMembersList.MouseDoubleClick += (sender, e) =>
+			{
+				int index = this._cycleMembersList.IndexFromPoint(e.Location);
+				if (index < 0 || index >= this._cycleMembersList.Items.Count)
+				{
+					return;
+				}
+
+				this._allowCycleMemberListCheckToggle = true;
+				try
+				{
+					CheckState current = this._cycleMembersList.GetItemCheckState(index);
+					this._cycleMembersList.SetItemCheckState(
+						index,
+						current == CheckState.Checked ? CheckState.Unchecked : CheckState.Checked);
+				}
+				finally
+				{
+					this._allowCycleMemberListCheckToggle = false;
+				}
+			};
+
+
+			Button upButton = new Button { Text = "↑", Location = new Point(this._cycleMembersList.Right + 6, this._cycleMembersList.Top), Size = new Size(32, 32) };
+			upButton.Click += (sender, e) =>
+			{
+				int index = this._cycleMembersList.SelectedIndex;
+
+				if (index > 0)
+				{
+					string item = this._cycleMembersList.Items[index].ToString();
+					var itemChecked = this._cycleMembersList.GetItemChecked(index);
+					this._cycleMembersList.Items.RemoveAt(index);
+					this._cycleMembersList.Items.Insert(index - 1, item);
+					this._cycleMembersList.SelectedIndex = index - 1;
+					_allowCycleMemberListCheckToggle = true;
+					this._cycleMembersList.SetItemChecked(index - 1, itemChecked);
+					_allowCycleMemberListCheckToggle = false;
+					List<string> _clientMembers = Enumerable.Range(0, this._cycleMembersList.Items.Count)
+						.Where(i => this._cycleMembersList.GetItemChecked(i))
+						.Select(i => this._cycleMembersList.Items[i].ToString())
+						.ToList(); 
+                    this.CycleGroupMembershipRenumberRequested?.Invoke(this._cycleGroupsList.SelectedIndex, _clientMembers);
+				}
+			};
+
+			Button downButton = new Button { Text = "↓", Location = new Point(this._cycleMembersList.Right + 6, this._cycleMembersList.Bottom - 32), Size = new Size(32, 32) };
+			downButton.Click += (sender, e) =>
+			{
+				int index = this._cycleMembersList.SelectedIndex;
+
+				if ((index >= 0) &&
+					(index < (this._cycleMembersList.Items.Count - 1)))
+				{
+					string item = this._cycleMembersList.Items[index].ToString();
+					var itemChecked = this._cycleMembersList.GetItemChecked(index);
+					this._cycleMembersList.Items.RemoveAt(index);
+					this._cycleMembersList.Items.Insert(index + 1, item);
+					this._cycleMembersList.SelectedIndex = index + 1;
+					_allowCycleMemberListCheckToggle = true;
+					this._cycleMembersList.SetItemChecked(index + 1, itemChecked);
+					_allowCycleMemberListCheckToggle = false;
+
+					List<string> _clientMembers = Enumerable.Range(0, this._cycleMembersList.Items.Count)
+						.Where(i => this._cycleMembersList.GetItemChecked(i))
+						.Select(i => this._cycleMembersList.Items[i].ToString())
+						.ToList();
+					this.CycleGroupMembershipRenumberRequested?.Invoke(this._cycleGroupsList.SelectedIndex, _clientMembers);
+				}
+			};
+
+			panel.Controls.Add(header);
             panel.Controls.Add(this._cycleGroupsList);
             panel.Controls.Add(addButton);
             panel.Controls.Add(removeButton);
@@ -665,8 +745,9 @@ namespace EveOPreview.View
             panel.Controls.Add(this._cycleBackwardControl);
             panel.Controls.Add(membersLabel);
             panel.Controls.Add(this._cycleMembersList);
-
-            return panel;
+			panel.Controls.Add(upButton);
+			panel.Controls.Add(downButton);
+			return panel;
         }
 
         private Panel BuildMinimizeAllRow()
@@ -738,19 +819,25 @@ namespace EveOPreview.View
             // Show every known client title (live rows + any members not currently running) and
             // tick the ones that belong to the selected group.
             HashSet<string> members = new HashSet<string>(memberClients ?? new List<string>(), StringComparer.OrdinalIgnoreCase);
-            SortedSet<string> titles = new SortedSet<string>(this._clientHotkeyRows.Keys, StringComparer.OrdinalIgnoreCase);
-            foreach (string member in members)
+            List<string> titles = new List<string>();
+            titles.AddRange(memberClients);
+			HashSet<string> existingTitles = new HashSet<string>(titles,StringComparer.OrdinalIgnoreCase);
+            foreach (string member in this._clientHotkeyRows.Keys)
             {
-                titles.Add(member);
+                if (existingTitles.Add(member))
+                {
+                    titles.Add(member);
+                }
             }
-
             this._cycleMembersList.BeginUpdate();
             this._cycleMembersList.Items.Clear();
+            _allowCycleMemberListCheckToggle = true;
             foreach (string title in titles)
             {
                 this._cycleMembersList.Items.Add(title, members.Contains(title));
             }
-            this._cycleMembersList.EndUpdate();
+			_allowCycleMemberListCheckToggle = false;
+			this._cycleMembersList.EndUpdate();
 
             this._suppressCycleEvents = false;
         }
@@ -1037,10 +1124,17 @@ namespace EveOPreview.View
             TabControl tabControl = this.Controls.Find("ContentTabControl", true).FirstOrDefault() as TabControl;
             if (tabControl != null)
             {
-                tabControl.SelectedIndexChanged += (sender, e) => this.ResizeToActiveTab();
-            }
+                tabControl.SelectedIndexChanged += (sender, e) =>
+                {
+                    this.ResizeToActiveTab();
+                    if ((tabControl.SelectedTab.Name == "HotkeysTabPage") && (this._hotkeyRowsPanel != null))
+                    {
+                        this.PushSelectedCycleGroupDetailRequested?.Invoke();
+                    }
+                };
+			}
 
-            this.ResizeToActiveTab();
+			this.ResizeToActiveTab();
         }
 
         // Grows the window to fit the active tab's content (the scrollable Hotkeys tab can exceed
@@ -1075,11 +1169,11 @@ namespace EveOPreview.View
                 target = new Size(
                     Math.Max(this._baseClientSize.Width, neededWidth + extraWidth),
                     Math.Max(this._baseClientSize.Height, neededHeight + extraHeight));
-            }
+			}
 
-            // Cap growth so a large number of clients can't push the window off-screen.
-            // Beyond this the Hotkeys panel scrolls (it is AutoScroll).
-            Rectangle workingArea = Screen.FromControl(this).WorkingArea;
+			// Cap growth so a large number of clients can't push the window off-screen.
+			// Beyond this the Hotkeys panel scrolls (it is AutoScroll).
+			Rectangle workingArea = Screen.FromControl(this).WorkingArea;
             int maxWidth = Math.Min(MAX_AUTO_GROW_WIDTH, workingArea.Width - 40);
             int maxHeight = Math.Min(MAX_AUTO_GROW_HEIGHT, workingArea.Height - 60);
             target.Width = Math.Min(target.Width, maxWidth);
@@ -1163,7 +1257,7 @@ namespace EveOPreview.View
 
         public string PromptForProfileName()
         {
-            return this.ShowTextInputDialog("Profile name:", "New Profile");
+            return this.ShowTextInputDialog("Profile name:", "New Profile","");
         }
 
         public void ShowMessage(string message)
@@ -1201,7 +1295,7 @@ namespace EveOPreview.View
         }
 
         // Minimal modal text-input dialog (WinForms has no built-in InputBox).
-        private string ShowTextInputDialog(string prompt, string title)
+        private string ShowTextInputDialog(string prompt, string title, string currentValue)
         {
             using (Form dialog = new Form())
             {
@@ -1218,6 +1312,7 @@ namespace EveOPreview.View
 
                 TextBox textBox = new TextBox();
                 textBox.SetBounds(12, 34, 296, 23);
+                textBox.Text = currentValue;
 
                 Button okButton = new Button { Text = "OK", DialogResult = DialogResult.OK };
                 okButton.SetBounds(150, 70, 75, 26);
@@ -1232,7 +1327,16 @@ namespace EveOPreview.View
                 dialog.AcceptButton = okButton;
                 dialog.CancelButton = cancelButton;
 
-                return dialog.ShowDialog(this) == DialogResult.OK ? textBox.Text.Trim() : null;
+				// Force the dialog to the front and give it real focus once shown
+				dialog.Shown += (s, e) =>
+				{
+					dialog.TopMost = true;
+					dialog.TopMost = false;
+					dialog.Activate();
+					textBox.Focus();
+				};
+
+				return dialog.ShowDialog(this) == DialogResult.OK ? textBox.Text.Trim() : null;
             }
         }
 
@@ -1300,8 +1404,10 @@ namespace EveOPreview.View
         public Action<int, string> CycleGroupRenameRequested { get; set; }
         public Action<int, bool, Keys> CycleGroupHotkeyChanged { get; set; }
         public Action<int, string, bool> CycleGroupMembershipChanged { get; set; }
+		public Action<int, List<string>> CycleGroupMembershipRenumberRequested { get; set; } 
 		public Action<Keys> MinimizeAllHotkeyChanged { get; set; }
 		public Action<Keys> RefreshAllHotkeyChanged { get; set; }
+		public Action PushSelectedCycleGroupDetailRequested { get; set; }
 
 		public Action<string> ProfileActivateRequested { get; set; }
         public Action ProfileNewRequested { get; set; }
@@ -1312,32 +1418,49 @@ namespace EveOPreview.View
         public Action ProfileImportRequested { get; set; }
 
         #region UI events
-        private void ContentTabControl_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            TabControl control = (TabControl)sender;
-            TabPage page = control.TabPages[e.Index];
-            Rectangle bounds = control.GetTabRect(e.Index);
 
-            Graphics graphics = e.Graphics;
+		private void ContentTabControl_DrawItem(object sender, DrawItemEventArgs e)
+		{
+			TabControl control = (TabControl)sender;
+			TabPage page = control.TabPages[e.Index];
+			Rectangle bounds = control.GetTabRect(e.Index);
 
-            Brush textBrush = new SolidBrush(this._tabTextColor);
-            Brush backgroundBrush = (e.State == DrawItemState.Selected)
-                                        ? new SolidBrush(this._tabSelectedBack)
-                                        : new SolidBrush(this._tabUnselectedBack);
-            graphics.FillRectangle(backgroundBrush, e.Bounds);
+			Graphics graphics = e.Graphics;
+			bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
 
-            // Use our own font
-            Font font = new Font("Arial", this.Font.Size * 1.5f, FontStyle.Bold, GraphicsUnit.Pixel);
+			// Flat look: unselected tabs blend with the form, the selected one
+			// is highlighted with a lighter background and an accent bar
+			using (
+			//Brush backgroundBrush = new SolidBrush(isSelected ? SystemColors.Window : SystemColors.Control)
+			Brush backgroundBrush = (e.State == DrawItemState.Selected)
+										? new SolidBrush(this._tabSelectedBack)
+										: new SolidBrush(this._tabUnselectedBack)
+                )
+			{
+				graphics.FillRectangle(backgroundBrush, bounds);
+			}
 
-            // Draw string and center the text
-            StringFormat stringFlags = new StringFormat();
-            stringFlags.Alignment = StringAlignment.Center;
-            stringFlags.LineAlignment = StringAlignment.Center;
+			if (isSelected)
+			{
+				using (Brush accentBrush = new SolidBrush(SystemColors.Highlight))
+				{
+					graphics.FillRectangle(accentBrush, new Rectangle(bounds.X, bounds.Y, this.LogicalToDeviceUnits(4), bounds.Height));
+				}
+			}
 
-            graphics.DrawString(page.Text, font, textBrush, bounds, stringFlags);
-        }
+			using (Font font = new Font(this.Font, isSelected ? FontStyle.Bold : FontStyle.Regular))
+			using (
+                // Brush textBrush = new SolidBrush(SystemColors.ControlText)
+                Brush textBrush = new SolidBrush(this._tabTextColor)
+                )
+			using (StringFormat stringFormat = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center, Trimming = StringTrimming.EllipsisCharacter })
+			{
+				Rectangle textBounds = new Rectangle(bounds.X + this.LogicalToDeviceUnits(12), bounds.Y, bounds.Width - this.LogicalToDeviceUnits(14), bounds.Height);
+				graphics.DrawString(page.Text, font, textBrush, textBounds, stringFormat);
+			}
+		}
 
-        private void OptionChanged_Handler(object sender, EventArgs e)
+		private void OptionChanged_Handler(object sender, EventArgs e)
         {
             if (this._suppressEvents)
             {
@@ -1442,7 +1565,10 @@ namespace EveOPreview.View
             this.BringToFront();
         }
 
-        private void ExitMenuItemClick_Handler(object sender, EventArgs e)
+		private static readonly uint RESTORE_INSTANCE_MESSAGE =
+			Services.Interop.User32NativeMethods.RegisterWindowMessage(Program.RESTORE_INSTANCE_MESSAGE_NAME);
+
+		private void ExitMenuItemClick_Handler(object sender, EventArgs e)
         {
             this.ApplicationExitRequested?.Invoke();
         }
@@ -1485,7 +1611,28 @@ namespace EveOPreview.View
             this._cycleGroupIndicatorMap[ViewZoomAnchor.SE] = this.CycleGroupIndicatorSERadioButton;
         }
 
-        private void InitFormSize()
+		// The content area has no frame of its own; a single line separates it from the tab strip
+		private void InitTabSeparator()
+		{
+			TabControl tabControl = (TabControl)this.Controls.Find("ContentTabControl", false).First();
+
+			foreach (TabPage page in tabControl.TabPages)
+			{
+				page.Paint += this.TabPage_Paint_Handler;
+			}
+		}
+
+		private void TabPage_Paint_Handler(object sender, PaintEventArgs e)
+		{
+			TabPage page = (TabPage)sender;
+
+			using (Pen pen = new Pen(SystemColors.ControlDark))
+			{
+				e.Graphics.DrawLine(pen, 0, 0, 0, page.Height);
+			}
+		}
+
+		private void InitFormSize()
         {
             const int BUFFER_PIXEL_AMOUNT = 8;
             // resize form height based on tabbed control item height

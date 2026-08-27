@@ -8,6 +8,11 @@ namespace EveOPreview.Services.Interop
 		public const uint SPI_SETANIMATION = 0x0049;
 		public const uint SPI_GETANIMATION = 0x0048;
 
+		public static readonly IntPtr HWND_BROADCAST = new IntPtr(0xFFFF);
+
+		public static readonly IntPtr HWND_TOP = new IntPtr(0);
+		public static readonly IntPtr HWND_TOPMOST = new IntPtr(-1);
+
 		[DllImport("user32.dll")]
 		public static extern IntPtr GetForegroundWindow();
 
@@ -50,6 +55,12 @@ namespace EveOPreview.Services.Interop
 
 		[DllImport("user32.dll")]
 		public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+		[DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+		public static extern uint RegisterWindowMessage(string message);
+
+		[DllImport("user32.dll", SetLastError = true)]
+		public static extern bool PostMessage(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
 
 		[DllImport("user32.dll")]
 		[return: MarshalAs(UnmanagedType.Bool)]

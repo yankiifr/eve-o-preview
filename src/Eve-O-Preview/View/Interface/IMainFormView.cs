@@ -91,9 +91,11 @@ namespace EveOPreview.View
         Action<int> CycleGroupRemoveRequested { get; set; }
         Action<int, string> CycleGroupRenameRequested { get; set; }
         Action<int, bool, Keys> CycleGroupHotkeyChanged { get; set; }      // (groupIndex, isForward, hotkey)
-        Action<int, string, bool> CycleGroupMembershipChanged { get; set; } // (groupIndex, clientTitle, isMember)
+		Action<int, string, bool> CycleGroupMembershipChanged { get; set; } // (groupIndex, clientTitle, isMember)
+		Action<int, List<string>> CycleGroupMembershipRenumberRequested { get; set; } // (groupIndex)
 		Action<Keys> MinimizeAllHotkeyChanged { get; set; }
 		Action<Keys> RefreshAllHotkeyChanged { get; set; }
+        Action PushSelectedCycleGroupDetailRequested { get; set; }
 
 		// --- Profiles ---
 		Action<string> ProfileActivateRequested { get; set; }

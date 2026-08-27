@@ -14,6 +14,11 @@ namespace EveOPreview
 	static class Program
 	{
 		private static string MUTEX_NAME = "EVE-O-Preview Single Instance Mutex";
+
+		// Name of the Windows message used to ask an already running instance
+		// to restore its main window from the tray
+		public const string RESTORE_INSTANCE_MESSAGE_NAME = "EVE-O-Preview Restore Instance";
+
 		public static bool UseAppdata = false;
 
 		private static Mutex _singleInstanceMutex;
@@ -28,9 +33,17 @@ namespace EveOPreview
 			Program._singleInstanceMutex = Program.GetInstanceToken();
 
 			// If it was not possible to acquire the app token then another app instance is already running
-			// Nothing to do here
+			// Ask that instance to show itself and quit
 			if (Program._singleInstanceMutex == null)
 			{
+				uint message = Services.Interop.User32NativeMethods.RegisterWindowMessage(Program.RESTORE_INSTANCE_MESSAGE_NAME);
+				if (message != 0)
+				{
+					// HWND_BROADCAST is used because the running instance's main window
+					// is hidden when minimized to tray and cannot be found by title
+					Services.Interop.User32NativeMethods.PostMessage(Services.Interop.User32NativeMethods.HWND_BROADCAST, message, IntPtr.Zero, IntPtr.Zero);
+				}
+
 				return;
 			}
 
