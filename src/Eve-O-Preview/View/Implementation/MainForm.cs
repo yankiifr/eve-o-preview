@@ -1448,7 +1448,7 @@ namespace EveOPreview.View
 				}
 			}
 
-			using (Font font = new Font(this.Font, isSelected ? FontStyle.Bold : FontStyle.Regular))
+			using (Font font = new Font(this.Font.FontFamily, this.Font.Size * 1.5f, isSelected ? FontStyle.Bold : FontStyle.Regular, GraphicsUnit.Pixel))
 			using (
                 // Brush textBrush = new SolidBrush(SystemColors.ControlText)
                 Brush textBrush = new SolidBrush(this._tabTextColor)
