@@ -327,21 +327,38 @@ namespace EveOPreview.Services
             {
                 foreach (CycleGroupConfiguration group in this._configuration.CycleGroups)
                 {
-                    RegisterCycleClientHotkey(group.ForwardHotkeys?.Select(x => this._configuration.StringToKey(x)), true, group.ClientsOrder);
-                    RegisterCycleClientHotkey(group.BackwardHotkeys?.Select(x => this._configuration.StringToKey(x)), false, group.ClientsOrder);
+                    RegisterCycleClientHotkey(group.ForwardHotkeys, true, group.ClientsOrder);
+                    RegisterCycleClientHotkey(group.BackwardHotkeys, false, group.ClientsOrder);
                 }
             }
 
             RegisterMinimizeAllClientsHotkey(this._configuration.MinimizeAllClientsHotkeys?.Select(x => this._configuration.StringToKey(x)));
         }
 
-        public void RegisterCycleClientHotkey(IEnumerable<Keys> keys, bool isForwards, Dictionary<string, int> cycleOrder)
+        public void RegisterCycleClientHotkey(IEnumerable<string> hotkeys, bool isForwards, Dictionary<string, int> cycleOrder)
         {
-            foreach (var hotkey in keys)
+            if (hotkeys == null)
             {
+                return;
+            }
+
+            foreach (string rawHotkey in hotkeys)
+            {
+                // Mouse buttons are not handled by the keyboard hotkey API.
+                // They are routed to the low level mouse hook instead
+                MouseButton mouseButton = MouseHookHandler.ParseButton(rawHotkey);
+
+                if (mouseButton != MouseButton.None)
+                {
+                    MouseHookHandler.Instance.Register(mouseButton, () => this.CycleNextClientOnMouseButton(isForwards, cycleOrder));
+                    continue;
+                }
+
+                Keys hotkey = this._configuration.StringToKey(rawHotkey);
+
                 if (hotkey == Keys.None)
                 {
-                    return;
+                    continue;
                 }
 
                 var newHandler = new HotkeyHandler(default(IntPtr), hotkey);
@@ -354,6 +371,26 @@ namespace EveOPreview.Services
                 newHandler.Register();
                 this._cycleClientHotkeyHandlers.Add(newHandler);
             }
+        }
+
+        // Called from the low level mouse hook, so it has to answer immediately.
+        // The button is consumed only while an EVE client (or one of the thumbnails)
+        // is the foreground window - everywhere else the button keeps its usual
+        // meaning, like the 'back' and 'forward' navigation of a web browser
+        private bool CycleNextClientOnMouseButton(bool isForwards, Dictionary<string, int> cycleOrder)
+        {
+            IntPtr foregroundWindowHandle = this._windowManager.GetForegroundWindowHandle();
+
+            if (!this.IsClientWindowActive(foregroundWindowHandle))
+            {
+                return false;
+            }
+
+            // The actual client switch is a slow operation. Running it inside the hook
+            // callback would make Windows drop the hook, so it is queued instead
+            this._dispatcher.BeginInvoke(new Action(() => this.CycleNextClient(isForwards, cycleOrder)));
+
+            return true;
         }
         public void RegisterMinimizeAllClientsHotkey(IEnumerable<Keys> keys)
         {
@@ -417,6 +454,10 @@ namespace EveOPreview.Services
                 } catch { }
             }
             this._cycleClientHotkeyHandlers.Clear();
+
+            // The mouse button bindings are re-created below as well,
+            // so the previous ones have to go - otherwise they pile up on every reload
+            MouseHookHandler.Instance.UnregisterAll();
 
             // Re-register cycle / minimize-all hotkeys.
             this.RegisterConfiguredCycleHotkeys();
