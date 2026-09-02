@@ -252,6 +252,33 @@ Should you wish to remove these HotKeys completely, Simply set the values to emp
 * For the best experience try to use the Control modifier. In the default example F14 is used to cycle to the next client, but if pressed mid locking a target (Control + Clicking) then the client will not cycle. By registering Control+F4 as an additional hotkey, the client will cycle.
 * For a list of supported keys, see: https://docs.microsoft.com/en-us/dotnet/api/system.windows.forms.keys
 
+### Using Mouse Buttons As Hotkeys
+
+The cycle hotkeys also accept **mouse buttons**. This is handy on a keyboard that cannot produce the F13-F24 keys recommended above, or simply to keep the client switching under the thumb.
+
+Mouse buttons cannot be registered through the keyboard hotkey API of Windows, so EVE-O Preview watches them with a low level mouse hook instead. They are written in the very same **CycleGroupNForwardHotkeys** / **CycleGroupNBackwardHotkeys** lists, next to the usual key combinations:
+
+    "CycleGroup1ForwardHotkeys": [
+      "XButton2",
+      "Control+Alt+Right"
+    ],
+    "CycleGroup1BackwardHotkeys": [
+      "XButton1",
+      "Control+Alt+Left"
+    ]
+
+| Value | Button |
+| --- | --- |
+| **XButton1** or **Mouse4** | First side button, usually the 'back' one |
+| **XButton2** or **Mouse5** | Second side button, usually the 'forward' one |
+| **Middle** or **Mouse3** | Middle button / mouse wheel click |
+
+Three things are worth knowing:
+
+* The button is captured **only while an EVE client or one of its thumbnails is the foreground window**. Everywhere else - in a web browser for instance - the side buttons keep their usual meaning.
+* While EVE is in the foreground the button is consumed and is **not** relayed to the game, exactly like a keyboard hotkey. Do not pick a button that is bound to something in EVE.
+* The left and right mouse buttons cannot be used here. They already serve the thumbnail mouse gestures described above.
+
 ### Per Client Border Color
 Have you ever wanted your main client to show up in a different color so that it more easily catches your eye? Or maybe your Logi to stand out?
 
@@ -288,6 +315,8 @@ Open the file using any text editor. find the entry **PerClientThumbnailSize**. 
 You should modify this entry with a list of each of your clients replacing "Example Toon 1", etc with the name of your character. The values on the right represent the size of the thumbnail.
 
 If a client does not appear in this list, then it will use the global thumbnail size by default.
+
+Editing this entry by hand is optional though: resizing a thumbnail with the left+right mouse drag **stores its new size for that client automatically**, and that size is applied again on the next run. Resizing one thumbnail no longer resizes all the other ones.
 
 ### Per Client Zoom Anchor
 Would you like to have different clients with different ZoomAnchor for each thumbnail ?
