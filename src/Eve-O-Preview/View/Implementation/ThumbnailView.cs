@@ -572,10 +572,21 @@ namespace EveOPreview.View
 
 		private void MouseMove_Handler(object sender, MouseEventArgs e)
 		{
-			if (this._isCustomMouseModeActive)
+			if (!this._isCustomMouseModeActive)
 			{
-				this.ProcessCustomMouseMode(e.Button.HasFlag(MouseButtons.Left), e.Button.HasFlag(MouseButtons.Right));
+				return;
 			}
+
+			// No button is pressed anymore - the drag operation is over.
+			// Without this check the thumbnail would follow the mouse cursor around
+			// if the button was released outside of the thumbnail window
+			if (e.Button == MouseButtons.None)
+			{
+				this.ExitCustomMouseMode();
+				return;
+			}
+
+			this.ProcessCustomMouseMode(e.Button.HasFlag(MouseButtons.Left), e.Button.HasFlag(MouseButtons.Right));
 		}
 
 		private void MouseUp_Handler(object sender, MouseEventArgs e)

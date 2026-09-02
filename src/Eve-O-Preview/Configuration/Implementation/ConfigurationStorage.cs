@@ -100,9 +100,11 @@ namespace EveOPreview.Configuration.Implementation
                     _lastWrittenHash = ComputeHash(rawData);
                     File.WriteAllText(filename, rawData);
                 }
-                catch (IOException)
+                catch (Exception)
                 {
                     // Ignore error if for some reason the updated config cannot be written down.
+                    // A locked file (antivirus, cloud sync, another instance) should never
+                    // bring the whole application down
                 }
             }
         }
