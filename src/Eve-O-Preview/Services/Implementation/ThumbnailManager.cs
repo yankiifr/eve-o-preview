@@ -49,6 +49,9 @@ namespace EveOPreview.Services
 		private int _hideThumbnailsDelay;
 
 		private List<HotkeyHandler> _cycleClientHotkeyHandlers = new List<HotkeyHandler>();
+
+		// Used to run the work queued from the mouse hook callback on the UI thread
+		private readonly Dispatcher _dispatcher;
 		#endregion
 
 		public ThumbnailManager(IMediator mediator, IThumbnailConfiguration configuration, IProcessMonitor processMonitor, IWindowManager windowManager, IThumbnailViewFactory factory)
@@ -60,6 +63,9 @@ namespace EveOPreview.Services
 			this._thumbnailViewFactory = factory;
 
 			this._activeClient = (IntPtr.Zero, ThumbnailManager.DEFAULT_CLIENT_TITLE);
+
+			// This constructor runs on the UI thread
+			this._dispatcher = Dispatcher.CurrentDispatcher;
 
 			this.EnableViewEvents();
 			this._isHoverEffectActive = false;
@@ -77,20 +83,20 @@ namespace EveOPreview.Services
 
 			this._hideThumbnailsDelay = this._configuration.HideThumbnailsDelay;
 
-			RegisterCycleClientHotkey(this._configuration.CycleGroup1ForwardHotkeys?.Select(x => this._configuration.StringToKey(x)), true, this._configuration.CycleGroup1ClientsOrder);
-			RegisterCycleClientHotkey(this._configuration.CycleGroup1BackwardHotkeys?.Select(x => this._configuration.StringToKey(x)), false, this._configuration.CycleGroup1ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup1ForwardHotkeys, true, this._configuration.CycleGroup1ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup1BackwardHotkeys, false, this._configuration.CycleGroup1ClientsOrder);
 
-			RegisterCycleClientHotkey(this._configuration.CycleGroup2ForwardHotkeys?.Select(x => this._configuration.StringToKey(x)), true, this._configuration.CycleGroup2ClientsOrder);
-			RegisterCycleClientHotkey(this._configuration.CycleGroup2BackwardHotkeys?.Select(x => this._configuration.StringToKey(x)), false, this._configuration.CycleGroup2ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup2ForwardHotkeys, true, this._configuration.CycleGroup2ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup2BackwardHotkeys, false, this._configuration.CycleGroup2ClientsOrder);
 
-			RegisterCycleClientHotkey(this._configuration.CycleGroup3ForwardHotkeys?.Select(x => this._configuration.StringToKey(x)), true, this._configuration.CycleGroup3ClientsOrder);
-			RegisterCycleClientHotkey(this._configuration.CycleGroup3BackwardHotkeys?.Select(x => this._configuration.StringToKey(x)), false, this._configuration.CycleGroup3ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup3ForwardHotkeys, true, this._configuration.CycleGroup3ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup3BackwardHotkeys, false, this._configuration.CycleGroup3ClientsOrder);
 
-			RegisterCycleClientHotkey(this._configuration.CycleGroup4ForwardHotkeys?.Select(x => this._configuration.StringToKey(x)), true, this._configuration.CycleGroup4ClientsOrder);
-			RegisterCycleClientHotkey(this._configuration.CycleGroup4BackwardHotkeys?.Select(x => this._configuration.StringToKey(x)), false, this._configuration.CycleGroup4ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup4ForwardHotkeys, true, this._configuration.CycleGroup4ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup4BackwardHotkeys, false, this._configuration.CycleGroup4ClientsOrder);
 
-			RegisterCycleClientHotkey(this._configuration.CycleGroup5ForwardHotkeys?.Select(x => this._configuration.StringToKey(x)), true, this._configuration.CycleGroup5ClientsOrder);
-			RegisterCycleClientHotkey(this._configuration.CycleGroup5BackwardHotkeys?.Select(x => this._configuration.StringToKey(x)), false, this._configuration.CycleGroup5ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup5ForwardHotkeys, true, this._configuration.CycleGroup5ClientsOrder);
+			RegisterCycleClientHotkey(this._configuration.CycleGroup5BackwardHotkeys, false, this._configuration.CycleGroup5ClientsOrder);
 		}
 
 		public IThumbnailView GetClientByTitle(string title)
@@ -220,13 +226,30 @@ namespace EveOPreview.Services
 			}
 		}
 
-		public void RegisterCycleClientHotkey(IEnumerable<Keys> keys, bool isForwards, Dictionary<string, int> cycleOrder)
+		public void RegisterCycleClientHotkey(IEnumerable<string> hotkeys, bool isForwards, Dictionary<string, int> cycleOrder)
 		{
-			foreach (var hotkey in keys)
+			if (hotkeys == null)
 			{
+				return;
+			}
+
+			foreach (string rawHotkey in hotkeys)
+			{
+				// Mouse buttons are not handled by the keyboard hotkey API.
+				// They are routed to the low level mouse hook instead
+				MouseButton mouseButton = MouseHookHandler.ParseButton(rawHotkey);
+
+				if (mouseButton != MouseButton.None)
+				{
+					MouseHookHandler.Instance.Register(mouseButton, () => this.CycleNextClientOnMouseButton(isForwards, cycleOrder));
+					continue;
+				}
+
+				Keys hotkey = this._configuration.StringToKey(rawHotkey);
+
 				if (hotkey == Keys.None)
 				{
-					return;
+					continue;
 				}
 
 				var newHandler = new HotkeyHandler(default(IntPtr), hotkey);
@@ -239,6 +262,26 @@ namespace EveOPreview.Services
 				newHandler.Register();
 				this._cycleClientHotkeyHandlers.Add(newHandler);
 			}
+		}
+
+		// Called from the low level mouse hook, so it has to answer immediately.
+		// The button is consumed only while an EVE client (or one of the thumbnails)
+		// is the foreground window - everywhere else the button keeps its usual
+		// meaning, like the 'back' and 'forward' navigation of a web browser
+		private bool CycleNextClientOnMouseButton(bool isForwards, Dictionary<string, int> cycleOrder)
+		{
+			IntPtr foregroundWindowHandle = this._windowManager.GetForegroundWindowHandle();
+
+			if (!this.IsClientWindowActive(foregroundWindowHandle))
+			{
+				return false;
+			}
+
+			// The actual client switch is a slow operation. Running it inside the hook
+			// callback would make Windows drop the hook, so it is queued instead
+			this._dispatcher.BeginInvoke(new Action(() => this.CycleNextClient(isForwards, cycleOrder)));
+
+			return true;
 		}
 
 		public void Start()
