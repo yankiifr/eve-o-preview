@@ -45,7 +45,11 @@
 			OverlayAreaPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
 			OverlayAreaPictureBox.TabIndex = 0;
 			OverlayAreaPictureBox.TabStop = false;
-			OverlayAreaPictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OverlayArea_Click);
+			OverlayAreaPictureBox.MouseEnter += new System.EventHandler(this.OverlayArea_MouseEnter);
+			OverlayAreaPictureBox.MouseLeave += new System.EventHandler(this.OverlayArea_MouseLeave);
+			OverlayAreaPictureBox.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OverlayArea_MouseDown);
+			OverlayAreaPictureBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OverlayArea_MouseMove);
+			OverlayAreaPictureBox.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OverlayArea_MouseUp);
 			// 
 			// OverlayLabel
 			// 
@@ -57,7 +61,11 @@
 			this.OverlayLabel.Size = new System.Drawing.Size(25, 13);
 			this.OverlayLabel.TabIndex = 1;
 			this.OverlayLabel.Text = "...";
-			this.OverlayLabel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OverlayArea_Click);
+			this.OverlayLabel.MouseEnter += new System.EventHandler(this.OverlayArea_MouseEnter);
+			this.OverlayLabel.MouseLeave += new System.EventHandler(this.OverlayArea_MouseLeave);
+			this.OverlayLabel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.OverlayArea_MouseDown);
+			this.OverlayLabel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.OverlayArea_MouseMove);
+			this.OverlayLabel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.OverlayArea_MouseUp);
 			// 
 			// ThumbnailOverlay
 			// 

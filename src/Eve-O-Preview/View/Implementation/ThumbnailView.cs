@@ -71,7 +71,7 @@ namespace EveOPreview.View
 
 			InitializeComponent();
 
-			this._overlay = new ThumbnailOverlay(this, this.MouseDown_Handler);
+			this._overlay = new ThumbnailOverlay(this, this.MouseEnter_Handler, this.MouseLeave_Handler, this.MouseDown_Handler, this.MouseMove_Handler, this.MouseUp_Handler);
 
 			SetDefaultBorderColor();
 			this._thumbnailManager = thumbnailManager;
@@ -488,8 +488,13 @@ namespace EveOPreview.View
 
 		private void MouseEnter_Handler(object sender, EventArgs e)
 		{
-			this.ExitCustomMouseMode();
-			this.SaveWindowSizeAndLocation();
+			// A drag started over the overlay window moves the mouse into the thumbnail one.
+			// Such a 'mouse enter' event should not interrupt the ongoing drag operation
+			if (Control.MouseButtons == MouseButtons.None)
+			{
+				this.ExitCustomMouseMode();
+				this.SaveWindowSizeAndLocation();
+			}
 
 			this.ThumbnailFocused?.Invoke(this.Id);
 		}
@@ -506,10 +511,20 @@ namespace EveOPreview.View
 
 		private void MouseMove_Handler(object sender, MouseEventArgs e)
 		{
-			if (this._isCustomMouseModeActive)
+			if (!this._isCustomMouseModeActive)
 			{
-				this.ProcessCustomMouseMode(e.Button.HasFlag(MouseButtons.Left), e.Button.HasFlag(MouseButtons.Right));
+				return;
 			}
+
+			// No button is pressed anymore - the drag operation is over.
+			// Without this check the thumbnail would follow the mouse cursor around
+			if (e.Button == MouseButtons.None)
+			{
+				this.ExitCustomMouseMode();
+				return;
+			}
+
+			this.ProcessCustomMouseMode(e.Button.HasFlag(MouseButtons.Left), e.Button.HasFlag(MouseButtons.Right));
 		}
 
 		private void MouseUp_Handler(object sender, MouseEventArgs e)
@@ -557,6 +572,15 @@ namespace EveOPreview.View
 
 		private void RestoreWindowSizeAndLocation()
 		{
+			// Nothing was stored yet - there is nothing to restore.
+			// Restoring an empty size would shrink the thumbnail to its minimum size
+			// and throw it into the top left corner of the primary screen
+			if (this._baseZoomSize.IsEmpty)
+			{
+				this.SaveWindowSizeAndLocation();
+				return;
+			}
+
 			this.Size = this._baseZoomSize;
 			this.MaximumSize = this._baseZoomMaximumSize;
 			this.Location = this._baseZoomLocation;
@@ -564,7 +588,17 @@ namespace EveOPreview.View
 
 		private void EnterCustomMouseMode()
 		{
-			this.RestoreWindowSizeAndLocation();
+			// The stored size/location are used to undo the hover 'Zoom' effect.
+			// If the zoom is disabled then there is nothing to undo and the stored values
+			// can be stale (f.e. when the mouse entered the overlay window instead of the thumbnail one)
+			if (this._config.ThumbnailZoomEnabled)
+			{
+				this.RestoreWindowSizeAndLocation();
+			}
+			else
+			{
+				this.SaveWindowSizeAndLocation();
+			}
 
 			this._isCustomMouseModeActive = true;
 			this._baseMousePosition = Control.MousePosition;

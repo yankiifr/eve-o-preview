@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using Newtonsoft.Json;
 
 namespace EveOPreview.Configuration.Implementation
@@ -57,15 +58,24 @@ namespace EveOPreview.Configuration.Implementation
 
 				File.Move(temporaryFilename, filename, true);
 			}
-			catch (IOException)
+			catch (Exception)
 			{
-				// Ignore error if for some reason the updated config cannot be written down
+				// Ignore error if for some reason the updated config cannot be written down.
+				// A locked (antivirus, cloud sync, another instance) config file
+				// should never bring the whole application down
 			}
 			finally
 			{
-				if (File.Exists(temporaryFilename))
+				try
 				{
-					File.Delete(temporaryFilename);
+					if (File.Exists(temporaryFilename))
+					{
+						File.Delete(temporaryFilename);
+					}
+				}
+				catch (Exception)
+				{
+					// Nothing can be done here - the temporary file will be overwritten on the next save
 				}
 			}
 		}

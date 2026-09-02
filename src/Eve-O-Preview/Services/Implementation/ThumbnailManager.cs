@@ -668,7 +668,7 @@ namespace EveOPreview.Services
 			}
 		}
 
-		private async void ThumbnailViewResized(IntPtr id)
+		private void ThumbnailViewResized(IntPtr id)
 		{
 			if (this._ignoreViewEvents)
 			{
@@ -676,9 +676,22 @@ namespace EveOPreview.Services
 			}
 
 			IThumbnailView view = this._thumbnailViews[id];
+
+			// Thumbnails of the clients sitting on the login screen are not managed
+			// so their size should not be stored either
+			if (!this.IsManageableThumbnail(view))
+			{
+				view.Refresh(false);
+				return;
+			}
+
 			this._configuration.SetThumbnailSize(view.Title, view.ThumbnailSize);
 			view.Refresh(false);
-			await this._mediator.Send(new SaveConfiguration());
+
+			// The resize event is raised for every single mouse move during the resize operation.
+			// Saving the configuration file on each of them would hammer the disk,
+			// so the very same delayed notification mechanics as for the thumbnail moves is used here
+			this.EnqueueLocationChange(view);
 		}
 
 		private void ThumbnailViewMoved(IntPtr id)
@@ -754,8 +767,10 @@ namespace EveOPreview.Services
 				return;
 			}
 
-			int width = this._configuration.ThumbnailSize.Width;
-			int height = this._configuration.ThumbnailSize.Height;
+			// Thumbnails can have their own individual sizes so the actual view size
+			// has to be used here instead of the default one
+			int width = view.ThumbnailSize.Width;
+			int height = view.ThumbnailSize.Height;
 
 			// TODO Extract method
 			int baseX = view.ThumbnailLocation.X;
@@ -778,8 +793,10 @@ namespace EveOPreview.Services
 
 				int testX = testView.ThumbnailLocation.X;
 				int testY = testView.ThumbnailLocation.Y;
+				int testWidth = testView.ThumbnailSize.Width;
+				int testHeight = testView.ThumbnailSize.Height;
 
-				Point[] testPoints = { new Point(testX, testY), new Point(testX + width, testY), new Point(testX, testY + height), new Point(testX + width, testY + height) };
+				Point[] testPoints = { new Point(testX, testY), new Point(testX + testWidth, testY), new Point(testX, testY + testHeight), new Point(testX + testWidth, testY + testHeight) };
 
 				var delta = ThumbnailManager.TestViewPoints(viewPoints, testPoints, thresholdX, thresholdY);
 

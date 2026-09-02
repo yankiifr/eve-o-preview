@@ -8,20 +8,57 @@ namespace EveOPreview.View
 	public partial class ThumbnailOverlay : Form
 	{
 		#region Private fields
-		private readonly Action<object, MouseEventArgs> _areaClickAction;
+		private readonly Action<object, EventArgs> _areaMouseEnterAction;
+		private readonly Action<object, EventArgs> _areaMouseLeaveAction;
+		private readonly Action<object, MouseEventArgs> _areaMouseDownAction;
+		private readonly Action<object, MouseEventArgs> _areaMouseMoveAction;
+		private readonly Action<object, MouseEventArgs> _areaMouseUpAction;
 		#endregion
 
-		public ThumbnailOverlay(Form owner, Action<object, MouseEventArgs> areaClickAction)
+		public ThumbnailOverlay(Form owner,
+			Action<object, EventArgs> areaMouseEnterAction,
+			Action<object, EventArgs> areaMouseLeaveAction,
+			Action<object, MouseEventArgs> areaMouseDownAction,
+			Action<object, MouseEventArgs> areaMouseMoveAction,
+			Action<object, MouseEventArgs> areaMouseUpAction)
 		{
 			this.Owner = owner;
-			this._areaClickAction = areaClickAction;
+			this._areaMouseEnterAction = areaMouseEnterAction;
+			this._areaMouseLeaveAction = areaMouseLeaveAction;
+			this._areaMouseDownAction = areaMouseDownAction;
+			this._areaMouseMoveAction = areaMouseMoveAction;
+			this._areaMouseUpAction = areaMouseUpAction;
 
 			InitializeComponent();
 		}
 
-		private void OverlayArea_Click(object sender, MouseEventArgs e)
+		private void OverlayArea_MouseEnter(object sender, EventArgs e)
 		{
-			this._areaClickAction(this, e);
+			this._areaMouseEnterAction(this, e);
+		}
+
+		private void OverlayArea_MouseLeave(object sender, EventArgs e)
+		{
+			this._areaMouseLeaveAction(this, e);
+		}
+
+		// The overlay is a separate window placed on top of the thumbnail one.
+		// Mouse events received here have to be forwarded to the thumbnail view
+		// as a whole sequence. Forwarding just a part of it (like the mouse up event only)
+		// leaves the thumbnail view in an inconsistent state
+		private void OverlayArea_MouseDown(object sender, MouseEventArgs e)
+		{
+			this._areaMouseDownAction(this, e);
+		}
+
+		private void OverlayArea_MouseMove(object sender, MouseEventArgs e)
+		{
+			this._areaMouseMoveAction(this, e);
+		}
+
+		private void OverlayArea_MouseUp(object sender, MouseEventArgs e)
+		{
+			this._areaMouseUpAction(this, e);
 		}
 
 		public void SetOverlayLabel(string label)
